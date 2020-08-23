@@ -1,0 +1,4 @@
+using UnityEngine;
+public class RefObject<T>: ScriptableObject {
+    public T reference;
+}
