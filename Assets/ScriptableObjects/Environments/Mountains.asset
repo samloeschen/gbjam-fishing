@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1bb4abdf21734c1da7c4cce74e6ac45, type: 3}
   m_Name: Mountains
   m_EditorClassIdentifier: 
+  reference:
+    name: Mountains
+    prefab: {fileID: 786348734271381104, guid: 39add64572c7b40a594792f559954ba8, type: 3}
+    sunEulers: {x: -252, y: 0, z: 0}

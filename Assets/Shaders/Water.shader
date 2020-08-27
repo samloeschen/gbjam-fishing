@@ -42,6 +42,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
+        ZWrite On
         LOD 200
 
         CGPROGRAM
@@ -125,7 +126,13 @@
         half4 LightingStandardPalette(SurfaceOutputStandard s, float3 viewDir, UnityGI gi) {
             half3 c = LightingStandard(s, viewDir, gi);
             half l =  pow(luminance(c), _Exponent);
-            return tex2D(_PaletteTexture, half2(l, 0));
+
+            // c.rgb = max(0.2, c);
+
+            // c.rgb = lerp(0.125, 1.0, pow(luminance(c), 2.0));
+
+            return float4(c, 1.0);
+            // return tex2D(_PaletteTexture, half2(l, 0));
         }
 
         void LightingStandardPalette_GI(SurfaceOutputStandard s, UnityGIInput data, inout UnityGI gi) {

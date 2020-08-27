@@ -1,9 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RodBehaviour : MonoBehaviour {
     public Animator animator;
+    public RodState currentState;
+
+    [Header("Bobber")]
+    public BobberBehaviour bobberBehaviour;
+
+    public event Action<RodAnimationEvent> onAnimationEvent;
+
+    // [HideInInspector]
+    public Vector2 bobberPosAnim = Vector2.zero;
+    [HideInInspector]
+    public float bobberScaleAnim = 1f;
+
+    public GameObject bobberHitParticlesPrefab;
+
+
+    void OnEnable() {
+        HandleInput(RodAction.Idle);
+    }
 
     public void HandleInput(RodAction action) {
         switch (action) {
@@ -18,10 +37,50 @@ public class RodBehaviour : MonoBehaviour {
             case RodAction.Reel:
             animator.SetTrigger("ReelStart");
             break;
+
+            case RodAction.Idle:
+            break;
+        }
+    }
+
+    public void Awake() {
+        onAnimationEvent += (RodAnimationEvent e) => {
+            switch (e) {
+                case RodAnimationEvent.CastStart:
+                break;
+                case RodAnimationEvent.CastEnd:
+                break;
+                case RodAnimationEvent.BiteStart:
+                break;
+                case RodAnimationEvent.BiteEnd:
+                break;
+                case RodAnimationEvent.ReelStart:
+                break;
+                case RodAnimationEvent.ReelEnd:
+                break;
+            }
+        };
+    }
+
+    public void Update() {
+    }
+
+    public void AnimationEventHook(RodAnimationEvent callback)  {
+        if (onAnimationEvent != null) {   
+            onAnimationEvent(callback);
         }
     }
 }
 
+
+public enum RodAnimationEvent {
+    CastStart, CastEnd, BiteStart, BiteEnd, ReelStart, ReelEnd
+}
+
+public enum RodState {
+    Idle, Casting, WaitingForBite, Reeling,
+}
+
 public enum RodAction {
-    Cast, Bite, Reel,
+    Idle, Cast, Bite, Reel,
 }

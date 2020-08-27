@@ -3,52 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bootstrap : MonoBehaviour {
-    public EnvironmentDataListObject environmentsListObject;
+    public GameStateManager gameStateManager;
+    public List<EnvironmentDataObject> environmenList;
+    public EnvironmentDataObject defaultEnvironment;
 
-    bool overrideEnvironmentObject;
-    public int customEnvironmentIndex;
-    public int defaultEnvironmentIndex;
-    public int currentEnvironmentIndex;
-    const string ENVIRONMENT_INDEX_KEY = "ENVIRONMENT_INDEX";
-    public void Awake() {
-        for (int i = 0; i < environmentsListObject.reference.Count; i++) {
-            environmentsListObject.reference[i].reference.index = i;
-        }
+    public bool useCustomEnvironment;
+    public EnvironmentDataObject customEnvironment;
 
-        EnvironmentDataObject environmentDataObject = null;
-        int environmentIndex;
-        if (PlayerPrefs.HasKey(ENVIRONMENT_INDEX_KEY)) {
-            environmentIndex = PlayerPrefs.GetInt(ENVIRONMENT_INDEX_KEY);
-        } else {
-            environmentIndex = defaultEnvironmentIndex;
-        }
-        environmentDataObject = environmentsListObject.reference[environmentIndex];
 
-#if UNTIY_ENGINE
-        if (overrideEnvironmentObject) {
-            environmentDataObject = environmentsListObject.reference[customEnvironmentIndex];
-        }
-#endif
-    }
+    [HideInInspector]
+    public EnvironmentDataObject currentEnvironment;
 
     void OnEnable() {
-        
+        gameStateManager.LoadGame();
+        currentEnvironment = defaultEnvironment;
+        for (int i = 0; i < environmenList.Count; i++) {
+            if (gameStateManager.gameState.currentEnvironmenName == environmenList[i].reference.name) {
+                currentEnvironment = environmenList[i];
+                break;
+            }
+        }
+#if UNITY_EDITOR
+        if (useCustomEnvironment) {
+            currentEnvironment = customEnvironment ?? currentEnvironment;
+        }
+#endif
+        LoadEnvironment(currentEnvironment.reference);
+    }
+
+    void LoadEnvironment(EnvironmentData environmentData) {
+        Vector3 position = environmentData.prefab.GetComponent<Transform>().position;
+        GameObject.Instantiate(environmentData.prefab, position, Quaternion.identity);
     }
 
     void OnDisable() {
-        SaveEnvironment();
-    }
-    void OnDestroy() {
-        SaveEnvironment();
-    }
-
-    public void SaveEnvironment() {
-        PlayerPrefs.SetInt("ENVIRONMENT_ID", currentEnvironmentIndex);
-    }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    public static void Initialize() {
-        var bootstrapObject = new GameObject("Bootstrap");
-        bootstrapObject.AddComponent<Bootstrap>();
+        gameStateManager.gameState.currentEnvironmenName = currentEnvironment.reference.name;
+        gameStateManager.SaveGame();
     }
 }
