@@ -6,12 +6,15 @@ public class FishManager : MonoBehaviour {
 
     public int maxFishCount;
     public GameObject fishPrefab;
+    public Transform fishParentTransform;
 
     [Header("Fish Behaviour")]
     public float newTargetPositionRadiusMin;
     public float newTargePositionRadiusMax;
     public float newDistanceThreshold = 0.01f;
     public float radiusHeightFactor = 0.5f;
+    public float randomMoveChance = 0.05f;
+    public Rect moveRegion;
 
     [Header("Fish Spawning")]
     public Rect spawnRegion;
@@ -34,7 +37,13 @@ public class FishManager : MonoBehaviour {
     }
 
     void OnEnable() {
+        activeFish.Clear();
+        oldFish.Clear();
         StartCoroutine(InitialSpawnRoutine());
+    }
+
+    void OnDisable() {
+        
     }
 
     void Update() {
@@ -44,6 +53,15 @@ public class FishManager : MonoBehaviour {
             UpdateFish(ref fishData);
             activeFish[i] = fishData;
         }
+    }
+
+
+    void OnDrawGizmos() {
+            Gizmos.color = Color.red;
+            moveRegion.DrawGizmos();
+
+            Gizmos.color = Color.white;
+            spawnRegion.DrawGizmos();
     }
 
     private IEnumerator InitialSpawnRoutine() {
@@ -57,12 +75,14 @@ public class FishManager : MonoBehaviour {
 
     void UpdateFish(ref ActiveFishData fish) {
         float totalDistance = (fish.startPosition - fish.targetPosition).magnitude;
-        float currentDistance = (fish.transform.position - fish.targetPosition).magnitude / totalDistance; 
-        float moveSpeed = fish.behaviour.moveSpeedCurve.Evaluate(currentDistance / totalDistance);
-        fish.transform.position = Vector3.MoveTowards(fish.transform.position, fish.targetPosition, moveSpeed * Time.deltaTime);
+        float currentDistance = ((Vector2)fish.transform.localPosition - fish.targetPosition).magnitude; 
+        float moveSpeed = fish.behaviour.moveSpeedCurve.Evaluate(1f - (currentDistance / totalDistance));
+        fish.transform.localPosition = Vector2.MoveTowards(fish.transform.localPosition, fish.targetPosition, Time.deltaTime * moveSpeed);
         if (currentDistance < newDistanceThreshold) {
             SetNewTargetPosition(ref fish);
         }
+
+        Debug.DrawLine(fish.startPosition, fish.targetPosition, Color.green);
     }
 
     void DespawnFish(ref ActiveFishData fishData) {
@@ -70,60 +90,81 @@ public class FishManager : MonoBehaviour {
     }
 
     void SetNewTargetPosition(ref ActiveFishData fish) {
-        const int newPositionCandidateCount = 10;
+        const int newPositionCandidateCount = 20;
         float radius = Random.Range(newTargetPositionRadiusMin, newTargePositionRadiusMax);
         float maxDist = 0f;
-        for (int i = 0; i < newPositionCandidateCount; i++) {
-            float angle = Random.value * Mathf.PI * 2f;
-            Vector3 candidatePos = fish.targetPosition + new Vector3 {
-                x = Mathf.Cos(angle) * radius,
-                y = Mathf.Sin(angle) * radiusHeightFactor
-            };
+        Vector2 center = spawnRegion.center;
+        fish.startPosition = fish.transform.localPosition;
+
+        if (Random.value < randomMoveChance) {
+            fish.targetPosition = moveRegion.RandomInRect();
+        } else {
+            float angleOffset = Random.value * Mathf.PI * 2f;
+            for (int i = 0; i < newPositionCandidateCount; i++) {
+                float angle = (i / (float)newPositionCandidateCount) * Mathf.PI * 2f + angleOffset;
+                Vector2 candidatePos = (Vector2)fish.transform.localPosition + new Vector2 {
+                    x = Mathf.Cos(angle) * radius,
+                    y = Mathf.Sin(angle) * radiusHeightFactor
+                };
+
+                if (!moveRegion.Contains(candidatePos)) { continue; }
+                if (Physics2D.OverlapCircle(candidatePos, spawnSafeRadius, spawnAvoidLayers)) { continue; }
+
+                float totalDist = 0f;
+                for (int j = 0; j < activeFish.Count; j++) {
+                    if (activeFish[j].id == fish.id) { continue; }
+                    totalDist += (candidatePos - (Vector2)activeFish[j].transform.localPosition).magnitude;
+                    totalDist += (candidatePos - activeFish[j].targetPosition).magnitude;
+                }
+                totalDist += (candidatePos - fish.lastTargetPosition).magnitude * 1.5f;
+                if (totalDist >= maxDist) {
+                    maxDist = totalDist;
+                    fish.targetPosition = candidatePos;
+                }
+            }
+        }
+        fish.lastTargetPosition = fish.transform.localPosition;
+    }
+
+    void SetInitialPosition(ref ActiveFishData fish) {
+        const int initialPositionCandidateCount = 3;
+        float maxDist = 0f;
+        for (int i = 0; i < initialPositionCandidateCount; i++) {
+            Vector2 candidatePos = spawnRegion.RandomInRect();
+
+            // check overlaps
+            if (Physics2D.OverlapCircle(candidatePos, spawnSafeRadius, spawnAvoidLayers)) { continue; }
+
             float totalDist = 0f;
             for (int j = 0; j < activeFish.Count; j++) {
-                totalDist += (candidatePos - activeFish[j].transform.position).magnitude;
+                if (activeFish[j].id == fish.id) { continue; }
+                totalDist += (candidatePos - (Vector2)activeFish[j].transform.localPosition).magnitude;
                 totalDist += (candidatePos - activeFish[j].targetPosition).magnitude;
             }
-            if (totalDist > maxDist) {
+            if (totalDist >= maxDist) {
                 maxDist = totalDist;
+                fish.startPosition = candidatePos;
+                fish.transform.localPosition = candidatePos;
                 fish.targetPosition = candidatePos;
             }
         }
     }
 
-    void SetInitialPosition(ref ActiveFishData fish) {
-        const int initialPositionCandidateCount = 10;
-        float maxDist = 0f;
-        for (int i = 0; i < initialPositionCandidateCount; i++) {
-            Vector3 candidatePos = spawnRegion.RandomInRect();
-
-            // check overlaps
-            if (Physics2D.OverlapCircle(candidatePos, spawnSafeRadius, spawnAvoidLayers)) {
-                continue;
-            }
-
-            float totalDist = 0f;
-            for (int j = 0; j < activeFish.Count; j++) {
-                totalDist += (candidatePos - activeFish[j].transform.position).magnitude;
-                totalDist += (candidatePos - activeFish[j].targetPosition).magnitude;
-            }
-            if (totalDist > maxDist) {
-                maxDist = totalDist;
-                fish.startPosition = candidatePos;
-            }
-        }
-    }
-
+    int _fishID;
     public ActiveFishData SpawnFish() {
-        var clone = PoolManager.PoolInstantiate(fishPrefab);
+        var clone = PoolManager.PoolInstantiate(fishPrefab, Vector2.zero, Quaternion.identity);
         ActiveFishData fishData = new ActiveFishData();
 
         clone.TryGetComponent<Transform>(out fishData.transform);
         clone.TryGetComponent<Animator>(out fishData.animator);
 
+        fishData.transform.SetParent(fishParentTransform, worldPositionStays: true);
+
         SetInitialPosition(ref fishData);
         SetNewTargetPosition(ref fishData);
         fishData.behaviour = fishBehaviours.GetRandomWithSwapback();
+
+        fishData.id = _fishID++;
         return fishData;
     }
 }
@@ -132,9 +173,11 @@ public class FishManager : MonoBehaviour {
 public struct ActiveFishData {
     public Transform transform;
     public Animator animator;
-    public Vector3 startPosition;
-    public Vector3 targetPosition;
+    public Vector2 startPosition;
+    public Vector2 targetPosition;
+    public Vector2 lastTargetPosition;
     public FishBehaviour behaviour;
+    public int id;
 
 }
 

@@ -55,4 +55,9 @@ public static class RectExtensions {
 		}
 		return r;
 	}
+
+
+	public static void DrawGizmos(this Rect r) {
+		Gizmos.DrawWireCube(new Vector3(r.center.x, r.center.y, 0.01f), new Vector3(r.size.x, r.size.y, 0.01f));
+	}
 }

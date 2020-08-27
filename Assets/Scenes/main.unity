@@ -259,7 +259,7 @@ Transform:
   - {fileID: 950303492}
   - {fileID: 630515594}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &76947167
 GameObject:
@@ -382,7 +382,7 @@ GameObject:
   - component: {fileID: 81441005}
   - component: {fileID: 81441004}
   m_Layer: 0
-  m_Name: BobberAnchor
+  m_Name: BobberAnchorTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -729,7 +729,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &375570500
 GameObject:
@@ -781,7 +781,115 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &458765620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 458765622}
+  - component: {fileID: 458765621}
+  m_Layer: 0
+  m_Name: FishManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &458765621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458765620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe58c9301b8e46f3ab4f2873eca6d2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxFishCount: 3
+  fishPrefab: {fileID: 831703870036781003, guid: 6f359452ed6894e6f89d9c831216104a,
+    type: 3}
+  fishParentTransform: {fileID: 458765622}
+  newTargetPositionRadiusMin: 0.2
+  newTargePositionRadiusMax: 0.4
+  newDistanceThreshold: 0.02
+  radiusHeightFactor: 0.5
+  moveRegion:
+    serializedVersion: 2
+    x: -0.6
+    y: -0.7
+    width: 1.2
+    height: 0.6
+  spawnRegion:
+    serializedVersion: 2
+    x: -0.6
+    y: -0.6
+    width: 1.2
+    height: 0.4
+  spawnAvoidLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  spawnSafeRadius: 0.05
+  initialFishCount: 1
+  initialSpawnDelay: 0
+  perFishDelay: 1
+  spawnDelayJitter: 0.5
+  fishBehaviours:
+  - lifeTime: 1
+    moveSpeedCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -0.05485171
+        value: 0.11627359
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.44098163
+        value: 0.15030693
+        inSlope: 0.00056726113
+        outSlope: 0.00056726113
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.9451483
+        value: 0.11627359
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  activeFish: []
+  oldFish: []
+--- !u!4 &458765622
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458765620}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &491284316
 GameObject:
@@ -813,7 +921,7 @@ Transform:
   - {fileID: 1550136511}
   - {fileID: 922371010}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 82.76601, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -1068,7 +1176,7 @@ GameObject:
   - component: {fileID: 897460213}
   - component: {fileID: 897460210}
   m_Layer: 0
-  m_Name: MoverTest
+  m_Name: BobberReticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1082,13 +1190,13 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897460207}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 1
@@ -1129,7 +1237,7 @@ MonoBehaviour:
   hitTest:
     circleCollider: {fileID: 897460213}
   contactEpsilon: 0.01
-  resolveBounciness: 0.01
+  resolveBounciness: 0
 --- !u!212 &897460211
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1191,7 +1299,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &897460213
 CircleCollider2D:
@@ -1203,7 +1311,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1221,8 +1329,10 @@ GameObject:
   - component: {fileID: 918168215}
   - component: {fileID: 918168214}
   - component: {fileID: 918168213}
+  - component: {fileID: 918168218}
+  - component: {fileID: 918168217}
   m_Layer: 0
-  m_Name: FishingBob
+  m_Name: FishingBobber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1254,7 +1364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 918168215}
-  scale: 1
+  scale: 0.61
   sprites:
   - {fileID: 21300000, guid: a9f6463c081e945d1ba13871e21a8205, type: 3}
   - {fileID: 21300000, guid: be56299b6368a4ea8821aec2250e781f, type: 3}
@@ -1297,7 +1407,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dffedb6c2b1bd4900bf3e3293b4f72e3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: be56299b6368a4ea8821aec2250e781f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1315,18 +1425,57 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 918168212}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1900598215}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.0501, y: 0.2652}
   m_SizeDelta: {x: 0.16, y: 0.15}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!50 &918168217
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918168212}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &918168218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918168212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e3237df688644a3821b2ada25e3986, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  physicsTransform: {fileID: 1095753169}
+  anchorTransform: {fileID: 81441003}
+  targetPosition: {x: 0, y: 0, z: 0}
+  physicsT: 0
+  castT: {x: 0, y: 0}
+  rigidbody2D: {fileID: 918168217}
 --- !u!1 &922371009
 GameObject:
   m_ObjectHideFlags: 0
@@ -1564,7 +1713,7 @@ GameObject:
   - component: {fileID: 1095753169}
   - component: {fileID: 1095753170}
   m_Layer: 0
-  m_Name: BobberPhysics
+  m_Name: BobberPhysicsTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1578,7 +1727,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1095753168}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.101, y: 0.234, z: 0}
+  m_LocalPosition: {x: 0.101, y: 0.256, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1900598215}
@@ -1597,7 +1746,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 4
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -1683,7 +1832,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1451922566
 GameObject:
@@ -1695,7 +1844,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1451922571}
   - component: {fileID: 1451922570}
-  - component: {fileID: 1451922569}
   - component: {fileID: 1451922568}
   m_Layer: 0
   m_Name: SunMoonCamera
@@ -1724,14 +1872,6 @@ MonoBehaviour:
   m_CropFrameX: 0
   m_CropFrameY: 0
   m_StretchFill: 0
---- !u!81 &1451922569
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451922566}
-  m_Enabled: 1
 --- !u!20 &1451922570
 Camera:
   m_ObjectHideFlags: 0
@@ -1956,7 +2096,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1818194533
 GameObject:
@@ -2036,7 +2176,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1900598212
 GameObject:
@@ -2050,6 +2190,7 @@ GameObject:
   - component: {fileID: 1900598214}
   - component: {fileID: 1900598213}
   - component: {fileID: 1900598216}
+  - component: {fileID: 1900598217}
   m_Layer: 0
   m_Name: FishingRod
   m_TagString: Untagged
@@ -2139,6 +2280,7 @@ Transform:
   m_Children:
   - {fileID: 81441003}
   - {fileID: 1095753169}
+  - {fileID: 918168216}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2154,16 +2296,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58072471b3edc462abc4746519541328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 1900598213}
   currentState: 0
-  bobberPrefab: {fileID: 0}
-  bobberTransform: {fileID: 918168216}
-  bobberSpriteScaler: {fileID: 918168214}
-  bobberTargetPosition: {x: 0, y: 0, z: 0}
-  bobberRootTransform: {fileID: 1095753169}
+  bobberBehaviour: {fileID: 0}
   bobberPosAnim: {x: 0, y: 0}
   bobberScaleAnim: 0
   bobberHitParticlesPrefab: {fileID: 0}
+--- !u!114 &1900598217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900598212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54d773a9eb4314f5ab4133ee997e2cb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reticleMover: {fileID: 897460210}
+  rodBehaviour: {fileID: 1900598216}
+  bobberBehaviour: {fileID: 918168218}
+  moveSpeed: 2
 --- !u!1 &1927060403
 GameObject:
   m_ObjectHideFlags: 0
@@ -2243,7 +2397,7 @@ Transform:
   m_Children:
   - {fileID: 587159201}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2123315917
 GameObject:
