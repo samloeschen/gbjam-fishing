@@ -9,6 +9,7 @@ public class RodBehaviour : MonoBehaviour {
 
     [Header("Bobber")]
     public BobberBehaviour bobberBehaviour;
+    public Animator bobberAnimator;
 
     public event Action<RodAnimationEvent> onAnimationEvent;
 
@@ -16,9 +17,6 @@ public class RodBehaviour : MonoBehaviour {
     public Vector2 bobberPosAnim = Vector2.zero;
     [HideInInspector]
     public float bobberScaleAnim = 1f;
-
-    public GameObject bobberHitParticlesPrefab;
-
 
     void OnEnable() {
         HandleInput(RodAction.Idle);
@@ -43,19 +41,29 @@ public class RodBehaviour : MonoBehaviour {
         }
     }
 
-    public void Awake() {
+    public void Start() {
         onAnimationEvent += (RodAnimationEvent e) => {
             switch (e) {
+                
                 case RodAnimationEvent.CastStart:
+                bobberAnimator.SetTrigger("Reset");
                 break;
+                
                 case RodAnimationEvent.CastEnd:
+                bobberAnimator.SetTrigger("HitWater");
                 break;
+                
                 case RodAnimationEvent.BiteStart:
                 break;
+                
                 case RodAnimationEvent.BiteEnd:
                 break;
+                
                 case RodAnimationEvent.ReelStart:
+                bobberAnimator.SetTrigger("Reset");
+                bobberBehaviour.isInWater = false;
                 break;
+                
                 case RodAnimationEvent.ReelEnd:
                 break;
             }
@@ -66,6 +74,7 @@ public class RodBehaviour : MonoBehaviour {
     }
 
     public void AnimationEventHook(RodAnimationEvent callback)  {
+        Debug.Log(callback);
         if (onAnimationEvent != null) {   
             onAnimationEvent(callback);
         }

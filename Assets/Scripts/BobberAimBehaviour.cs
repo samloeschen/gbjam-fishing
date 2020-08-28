@@ -7,6 +7,7 @@ public class BobberAimBehaviour: MonoBehaviour {
     public RodBehaviour rodBehaviour; 
     public BobberBehaviour bobberBehaviour;
     public float moveSpeed;
+
     void FixedUpdate() {
         Vector2 delta = Vector2.zero;
         if (Input.GetKey(KeyCode.UpArrow)) {
@@ -26,7 +27,9 @@ public class BobberAimBehaviour: MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.X)) {
             bobberBehaviour.targetPosition = reticleMover.position;
             rodBehaviour.HandleInput(RodAction.Cast);
+            reticleMover.gameObject.SetActive(false);
         }
+        reticleMover.Move(delta * Time.deltaTime);
         delta = delta.normalized * Time.deltaTime * moveSpeed;
     }
 }

@@ -24,10 +24,6 @@ public class MoverTest : MonoBehaviour {
         delta = delta.normalized * Time.deltaTime;
         mover.Move(delta);
     }
-
-    void OnCollisionEnter2D(Collision collision) {
-        Debug.Log(collision.collider.gameObject.name);
-    }
 } 
 
 
