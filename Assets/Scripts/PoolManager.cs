@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class PoolManager {
 
     public static Dictionary<GameObject, List<GameObject>> pools = new Dictionary<GameObject, List<GameObject>>();
+
     /*
 	* Use this function for general purpose GameObject instantiation. It will instantiate the
 	* a pooled instance immediately. If it doesn't find a pooled instance, it uses GetInstanceInactive()

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FishManager : MonoBehaviour {
 
+    public LayerMask bobberLayer;
     public int maxFishCount;
     public GameObject fishPrefab;
     public Transform fishParentTransform;
@@ -27,6 +28,21 @@ public class FishManager : MonoBehaviour {
     public Rect spawnRegion;
     public LayerMask spawnAvoidLayers;
     public float spawnSafeRadius = 0.1f;
+    public float despawnJitterMin = 0.1f;
+    public float despawnJitterMax = 0.3f;
+
+    public float shortSpawnIntervalMin;
+    public float shortSpawnIntervalMax;
+
+    public float longSpawnIntervalMin;
+    public float longSpawnIntervalMax;
+
+    float _queuedFishTimer;
+    int _queuedFishCount;
+
+    [Header("Fish Despawning")]
+    public float poolDelay;
+    public float bobberDespawnRadius;
 
     [Header("Bite Behaviour")]
     public float biteIntervalMin;
@@ -47,17 +63,18 @@ public class FishManager : MonoBehaviour {
 
     public List<FishBehaviour> fishBehaviours;
     public List<ActiveFishData> activeFish;
-    public List<ActiveFishData> oldFish;
 
     public int bitingFishID = -1;
 
+    List<ActiveFishData> oldFish;
+
     void Awake() {
         activeFish = new List<ActiveFishData>(16);
+        oldFish = new List<ActiveFishData>(16);
     }
 
     void OnEnable() {
         activeFish.Clear();
-        oldFish.Clear();
         StartCoroutine(InitialSpawnRoutine());
     }
 
@@ -66,11 +83,44 @@ public class FishManager : MonoBehaviour {
     }
 
     void Update() {
-        ActiveFishData fishData;
+        ActiveFishData fish;
         for (int i = 0; i < activeFish.Count; i++) {
-            fishData = activeFish[i];
-            UpdateFish(ref fishData);
-            activeFish[i] = fishData;
+            fish = activeFish[i];
+            UpdateFish(ref fish);
+            activeFish[i] = fish;
+        }
+
+        for (int i = 0; i < oldFish.Count; i++) {
+            fish = oldFish[i];
+            if (fish.timer > poolDelay && fish.timer - Time.deltaTime < poolDelay) { // lol hax
+                fish.animator.SetTrigger("Despawn");
+            }
+            fish.timer -= Time.deltaTime;
+            if (fish.timer <= 0f) {
+                PoolManager.PoolDestroy(fish.transform.gameObject);
+                oldFish.RemoveAt(i);
+            } else {
+                oldFish[i] = fish;
+            }
+        } 
+        // spawn new fish if needed
+        if (activeFish.Count < maxFishCount && _queuedFishTimer <= 0f) {
+            float shortInterval = Random.Range(shortSpawnIntervalMin, shortSpawnIntervalMax);
+            float longInterval = Random.Range(longSpawnIntervalMin, longSpawnIntervalMax);
+            float spawnInterval = shortInterval;
+            if (activeFish.Count + _queuedFishCount == 0) {
+                spawnInterval = longInterval;
+            } else if (Random.value < 0.5f) {
+                spawnInterval = longInterval;
+            }
+            _queuedFishTimer += spawnInterval;
+        }
+
+        if (_queuedFishTimer > 0f) {
+            _queuedFishTimer -= Time.deltaTime;
+            if (_queuedFishTimer <= 0f) {
+                activeFish.Add(SpawnFish());
+            }
         }
     }
 
@@ -92,7 +142,7 @@ public class FishManager : MonoBehaviour {
         yield return null;
     }
 
-    Collider2D[] _circleCastResults = new Collider2D[8];
+    Collider2D[] _overlapResults = new Collider2D[8];
     void UpdateFish(ref ActiveFishData fish) {
         switch (fish.state) {
             case FishState.Moving:
@@ -104,7 +154,7 @@ public class FishManager : MonoBehaviour {
             }
             fish.position = Vector2.MoveTowards(fish.position, fish.targetPosition, Time.deltaTime * moveSpeed);
             if (currentDistance < newDistanceThreshold) {
-                if (fish.targetBobber) {
+                if (fish.targetBobber && fish.targetBobber.isInWater) {
                     fish.state = FishState.Biting;
                     SetNextBiteInterval(ref fish);
                 } else {
@@ -132,15 +182,13 @@ public class FishManager : MonoBehaviour {
         }
 
         // check and see if fish is near a bobber
-        if (bitingFishID < 0) {
-            int overlapCount = Physics2D.OverlapCircleNonAlloc(fish.position, bobberLookRadius, _circleCastResults);
+        if (bitingFishID < 0 && fish.state != FishState.Despawning) {
+            int overlapCount = Physics2D.OverlapCircleNonAlloc(fish.position, bobberLookRadius, _overlapResults);
             for (int i = 0; i < overlapCount; i++) {
-                if (_circleCastResults[i].TryGetComponent<BobberBehaviour>(out var bobberBehaviour)) {
+                if (_overlapResults[i].TryGetComponent<BobberBehaviour>(out var bobberBehaviour)) {
                     if (!bobberBehaviour.isInWater) { continue; }
                     fish.state = FishState.Moving;
                     fish.targetBobber = bobberBehaviour;
-
-                    Debug.Log("Found bobber " + bobberBehaviour.position);
                     SetNewTargetPosition(ref fish, bobberBehaviour.position + bobberOffset);
                     bitingFishID = fish.id;
                     break;
@@ -150,8 +198,32 @@ public class FishManager : MonoBehaviour {
         Debug.DrawLine(fish.startPosition, fish.targetPosition, Color.green);
     }
 
-    void DespawnFish(ref ActiveFishData fishData) {
-        oldFish.Add(fishData);
+    void DespawnFish(ref ActiveFishData fish, float extraDelay = 0f) {
+        fish.state = FishState.Despawning;
+        fish.timer = poolDelay + extraDelay;
+        oldFish.Add(fish);
+    }
+
+    public bool TryCatchFish() {
+        ActiveFishData fish;
+        // despawn any extra fish near the bobber
+        for (int i = 0; i < activeFish.Count; i++) {
+            fish = activeFish[i];
+            if (fish.id == bitingFishID) { continue; }
+            if (Physics2D.OverlapCircle(fish.position, bobberDespawnRadius, bobberLayer)) {
+                activeFish.RemoveAt(i);
+                i--;
+                DespawnFish(ref fish, extraDelay: Random.Range(despawnJitterMin, despawnJitterMax));
+            }
+        }
+        
+        if (TryGetFishByID(bitingFishID, out var index, out fish)) {
+            DespawnFish(ref fish);
+            activeFish.RemoveAt(index);
+        }
+
+        bitingFishID = -1;
+        return false;
     }
 
     void DoBite(ref ActiveFishData fish) {
@@ -173,7 +245,8 @@ public class FishManager : MonoBehaviour {
         fish.timer = Random.Range(biteIntervalMin, biteIntervalMax);
     }
 
-    public bool GetFishByID(int id, out ActiveFishData fish) {
+    public bool TryGetFishByID(int id, out int index, out ActiveFishData fish) {
+        index = -1;
         if (id < 0) { 
             fish = default(ActiveFishData);
             return false;
@@ -181,6 +254,7 @@ public class FishManager : MonoBehaviour {
         for (int i = 0; i < activeFish.Count; i++) {
             if (activeFish[i].id == id) {
                 fish = activeFish[i];
+                index = i;
                 return true;
             }
         }
@@ -216,15 +290,15 @@ public class FishManager : MonoBehaviour {
             float totalDist = 0f;
             for (int j = 0; j < activeFish.Count; j++) {
                 if (activeFish[j].id == fish.id) { continue; }
-                float dist = (candidatePos - (Vector2)activeFish[j].position).magnitude;
-                dist += (candidatePos - (Vector2)activeFish[j].targetPosition).magnitude;
+                // float dist = (candidatePos - (Vector2)activeFish[j].position).magnitude;
+                float dist = (candidatePos - (Vector2)activeFish[j].targetPosition).magnitude;
                 totalDist += dist;
             }
-            currentScore += totalDist / (activeFish.Count - 1f) * avoidOtherFishWeight;
+            currentScore += (totalDist / (activeFish.Count - 1f)) * avoidOtherFishWeight;
 
             // score to avoid previous position
             currentScore += (candidatePos - fish.lastTargetPosition).magnitude * avoidPreviousPositionWeight;
-            if (GetFishByID(bitingFishID, out var bitingFish)) {
+            if (TryGetFishByID(bitingFishID, out _, out var bitingFish)) {
                 currentScore += (candidatePos - bitingFish.position).magnitude * avoidBitingFishWeight;
             }
 
@@ -249,9 +323,10 @@ public class FishManager : MonoBehaviour {
     }
 
     void SetInitialPosition(ref ActiveFishData fish) {
-        const int initialPositionCandidateCount = 3;
+        const int initialPositionCandidateCount = 10;
         float maxDist = 0f;
-        for (int i = 0; i < initialPositionCandidateCount; i++) {
+        int tries = 0;
+        while(tries < initialPositionCandidateCount) {
             Vector2 candidatePos = spawnRegion.RandomInRect();
 
             // check overlaps
@@ -268,7 +343,9 @@ public class FishManager : MonoBehaviour {
                 fish.startPosition = candidatePos;
                 fish.position = candidatePos;
                 fish.targetPosition = candidatePos;
+
             }
+            tries++;
         }
     }
 

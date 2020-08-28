@@ -10,7 +10,7 @@
         LOD 100
 
         Blend One OneMinusSrcAlpha
-        ZWrite Off  
+        ZWrite Off
 
         Pass
         {

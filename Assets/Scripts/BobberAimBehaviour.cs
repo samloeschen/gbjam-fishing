@@ -6,7 +6,15 @@ public class BobberAimBehaviour: MonoBehaviour {
     public CircleMover reticleMover;
     public RodBehaviour rodBehaviour; 
     public BobberBehaviour bobberBehaviour;
+    public FishManager fishManager;
+    
     public float moveSpeed;
+
+
+    [Header("Mash Indicator")]
+    public Animator mashIndicatorAnimator;
+    public Vector2 mashIndicatorOffset;
+
 
     void FixedUpdate() {
         Vector2 delta = Vector2.zero;
@@ -25,9 +33,19 @@ public class BobberAimBehaviour: MonoBehaviour {
 
         // pick spot
         if (Input.GetKeyDown(KeyCode.X)) {
-            bobberBehaviour.targetPosition = reticleMover.position;
-            rodBehaviour.HandleInput(RodAction.Cast);
-            reticleMover.gameObject.SetActive(false);
+            if (rodBehaviour.currentState == RodState.Idle) {
+                rodBehaviour.HandleInput(RodAction.Cast);
+                reticleMover.gameObject.SetActive(false);
+                bobberBehaviour.targetPosition = reticleMover.position;
+            }
+            else if (rodBehaviour.currentState == RodState.WaitingForBite) {
+                if (fishManager.TryCatchFish()) {
+                    rodBehaviour.HandleInput(RodAction.Bite);
+                } else {
+                    rodBehaviour.HandleInput(RodAction.Reel);
+                    reticleMover.gameObject.SetActive(true);
+                }
+            }
         }
         reticleMover.Move(delta * Time.deltaTime);
         delta = delta.normalized * Time.deltaTime * moveSpeed;

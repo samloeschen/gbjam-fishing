@@ -19,6 +19,7 @@ public class RodBehaviour : MonoBehaviour {
     public float bobberScaleAnim = 1f;
 
     void OnEnable() {
+        currentState = RodState.Idle;
         HandleInput(RodAction.Idle);
     }
 
@@ -46,10 +47,12 @@ public class RodBehaviour : MonoBehaviour {
             switch (e) {
                 
                 case RodAnimationEvent.CastStart:
+                currentState = RodState.Casting;
                 bobberAnimator.SetTrigger("Reset");
                 break;
                 
                 case RodAnimationEvent.CastEnd:
+                currentState = RodState.WaitingForBite;
                 bobberAnimator.SetTrigger("HitWater");
                 break;
                 
@@ -60,11 +63,13 @@ public class RodBehaviour : MonoBehaviour {
                 break;
                 
                 case RodAnimationEvent.ReelStart:
-                bobberAnimator.SetTrigger("Reset");
+                currentState = RodState.Reeling;
+                bobberAnimator.SetTrigger("Reel");
                 bobberBehaviour.isInWater = false;
                 break;
                 
                 case RodAnimationEvent.ReelEnd:
+                currentState = RodState.Idle;
                 break;
             }
         };
