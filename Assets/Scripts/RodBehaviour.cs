@@ -29,8 +29,12 @@ public class RodBehaviour : MonoBehaviour {
             animator.SetTrigger("CastStart");
             break;
 
-            case RodAction.Bite:
-            animator.SetTrigger("BiteStart");
+            case RodAction.SmallBite:
+            animator.SetTrigger("SmallBite");
+            break;
+
+            case RodAction.BigBite:
+            animator.SetTrigger("BigBite");
             break;
 
             case RodAction.Reel:
@@ -96,5 +100,5 @@ public enum RodState {
 }
 
 public enum RodAction {
-    Idle, Cast, Bite, Reel,
+    Idle, Cast, SmallBite, BigBite, Reel,
 }

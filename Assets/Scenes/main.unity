@@ -880,13 +880,19 @@ MonoBehaviour:
   shortSpawnIntervalMax: 4
   longSpawnIntervalMin: 7
   longSpawnIntervalMax: 8
-  poolDelay: 0.35
+  poolDelay: 0.5
   bobberDespawnRadius: 0.15
-  biteIntervalMin: 1
-  biteIntervalMax: 2
+  biteIntervalMin: 1.5
+  biteIntervalMax: 3
   bobberLookRadius: 0.1
+  smallBiteSweetSpotDuration: 0.52
+  bigBiteSweetSpotDuration: 0.52
+  failButtonDisableDelay: 0.3
   bobberOffset: {x: 0, y: -0.05}
   biteNotificationOffset: {x: 0, y: 0.1}
+  buttonTransform: {fileID: 1769636673}
+  buttonBobberOffset: {x: 0.15, y: 0.025}
+  buttonSpriteRenderer: {fileID: 1444504995}
   smallBiteAnimationPrefab: {fileID: 3384686774430822606, guid: 54e8373375e86470ca9a09701d3cee21,
     type: 3}
   bigBiteAnimationPrefab: {fileID: 39139924479013142, guid: a7b37a885780f4cc3ab8c1c972523a9d,
@@ -936,6 +942,10 @@ MonoBehaviour:
       m_RotationOrder: 0
   activeFish: []
   bitingFishID: -1
+  _smallBiteSweetSpotTimer: 0
+  _bigBiteSweetSpotTimer: 0
+  _successfulSmallBites: 0
+  _failedBites: 0
 --- !u!4 &458765622
 Transform:
   m_ObjectHideFlags: 0
@@ -2817,8 +2827,12 @@ MonoBehaviour:
   bobberBehaviour: {fileID: 918168218}
   fishManager: {fileID: 458765621}
   moveSpeed: 2
-  mashIndicatorAnimator: {fileID: 0}
+  buttonIndicatorAnimator: {fileID: 1444504994}
   mashIndicatorOffset: {x: 0, y: 0}
+  mashDecayRate: 0.15
+  mashPressValue: 0.18
+  mashMaxDuration: 1.5
+  mashMode: 0
 --- !u!1 &1927060403
 GameObject:
   m_ObjectHideFlags: 0

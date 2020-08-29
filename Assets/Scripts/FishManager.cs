@@ -48,8 +48,15 @@ public class FishManager : MonoBehaviour {
     public float biteIntervalMin;
     public float biteIntervalMax;
     public float bobberLookRadius;
+    public float smallBiteSweetSpotDuration;
+    public float bigBiteSweetSpotDuration;
+    public float failButtonDisableDelay;
+    float _buttonDisableTimer;
     public Vector2 bobberOffset;
     public Vector2 biteNotificationOffset;
+    public Transform buttonTransform;
+    public Vector2 buttonBobberOffset;
+    public SpriteRenderer buttonSpriteRenderer;
     
     public GameObject smallBiteAnimationPrefab;
     public GameObject bigBiteAnimationPrefab;
@@ -68,6 +75,8 @@ public class FishManager : MonoBehaviour {
 
     List<ActiveFishData> oldFish;
 
+    
+
     void Awake() {
         activeFish = new List<ActiveFishData>(16);
         oldFish = new List<ActiveFishData>(16);
@@ -76,10 +85,7 @@ public class FishManager : MonoBehaviour {
     void OnEnable() {
         activeFish.Clear();
         StartCoroutine(InitialSpawnRoutine());
-    }
-
-    void OnDisable() {
-        
+        buttonSpriteRenderer.enabled = false;
     }
 
     void Update() {
@@ -122,6 +128,22 @@ public class FishManager : MonoBehaviour {
                 activeFish.Add(SpawnFish());
             }
         }
+
+        if (_bigBiteSweetSpotTimer > 0f) {
+            _bigBiteSweetSpotTimer -= Time.deltaTime;
+            _bigBiteSweetSpotTimer = Mathf.Max(0f, _bigBiteSweetSpotTimer);
+        }
+        if (_smallBiteSweetSpotTimer > 0f) {
+            _smallBiteSweetSpotTimer -= Time.deltaTime;
+            _smallBiteSweetSpotTimer = Mathf.Max(0f, _smallBiteSweetSpotTimer); 
+        }
+
+        if (_buttonDisableTimer > 0f) {
+            _buttonDisableTimer -= Time.deltaTime;
+            if (_buttonDisableTimer <= 0f) {
+                buttonSpriteRenderer.enabled = false;
+            }
+        }
     }
 
 
@@ -155,8 +177,15 @@ public class FishManager : MonoBehaviour {
             fish.position = Vector2.MoveTowards(fish.position, fish.targetPosition, Time.deltaTime * moveSpeed);
             if (currentDistance < newDistanceThreshold) {
                 if (fish.targetBobber && fish.targetBobber.isInWater) {
+                    // set up bite minigame state, should prob be its own method...
+                    // also should probably contain a lot of this state in the ActiveFishData struct
                     fish.state = FishState.Biting;
                     SetNextBiteInterval(ref fish);
+                    buttonTransform.position = fish.targetBobber.position + buttonBobberOffset;
+                    _smallBiteSweetSpotTimer = 0f;
+                    _bigBiteSweetSpotTimer = 0f;
+                    _successfulSmallBites = 0;
+                    _failedBites = 0;
                 } else {
                     SetNewTargetPosition(ref fish);
                     if (Random.value < 0.5f) {
@@ -187,9 +216,12 @@ public class FishManager : MonoBehaviour {
             for (int i = 0; i < overlapCount; i++) {
                 if (_overlapResults[i].TryGetComponent<BobberBehaviour>(out var bobberBehaviour)) {
                     if (!bobberBehaviour.isInWater) { continue; }
+                    SetNewTargetPosition(ref fish, bobberBehaviour.position + bobberOffset);
                     fish.state = FishState.Moving;
                     fish.targetBobber = bobberBehaviour;
-                    SetNewTargetPosition(ref fish, bobberBehaviour.position + bobberOffset);
+
+                    Vector2 offset = bobberOffset;
+                    offset.x = bobberBehaviour.position.x < 0f ? offset.x : -offset.x;
                     bitingFishID = fish.id;
                     break;
                 }
@@ -198,18 +230,26 @@ public class FishManager : MonoBehaviour {
         Debug.DrawLine(fish.startPosition, fish.targetPosition, Color.green);
     }
 
+    void DespawnFish(int id) {
+        if (TryGetFishByID(bitingFishID, out var index, out var fish)) {
+            DespawnFish(ref fish);
+            activeFish.RemoveAt(index);
+        }
+    }
+
     void DespawnFish(ref ActiveFishData fish, float extraDelay = 0f) {
         fish.state = FishState.Despawning;
         fish.timer = poolDelay + extraDelay;
         oldFish.Add(fish);
     }
 
-    public bool TryCatchFish() {
+    public bool HandleReel() {
+        buttonSpriteRenderer.enabled = false;
         ActiveFishData fish;
         // despawn any extra fish near the bobber
         for (int i = 0; i < activeFish.Count; i++) {
             fish = activeFish[i];
-            if (fish.id == bitingFishID) { continue; }
+            // if (fish.id == bitingFishID) { continue; }
             if (Physics2D.OverlapCircle(fish.position, bobberDespawnRadius, bobberLayer)) {
                 activeFish.RemoveAt(i);
                 i--;
@@ -228,21 +268,43 @@ public class FishManager : MonoBehaviour {
 
     void DoBite(ref ActiveFishData fish) {
         fish.biteCount++;
-        bool isBigBite = fish.biteCount > fish.behaviour.minSmallBites && 
-                         Random.value < fish.behaviour.bigBiteChance;
-        GameObject biteAnimationPrefab  = isBigBite ? bigBiteAnimationPrefab : smallBiteAnimationPrefab;
+        buttonSpriteRenderer.enabled = true;
+        GameObject biteAnimationPrefab;
+        bool isBigBite = _successfulSmallBites > fish.behaviour.minSmallBites && Random.value < fish.behaviour.bigBiteChance;
         if (isBigBite) {
+            _bigBiteSweetSpotTimer = bigBiteSweetSpotDuration;
+            biteAnimationPrefab = bigBiteAnimationPrefab;
             fish.targetBobber.animator.SetTrigger("BigBite");
         } else {
+            _smallBiteSweetSpotTimer = smallBiteSweetSpotDuration;
+            biteAnimationPrefab = smallBiteAnimationPrefab;
             fish.targetBobber.animator.SetTrigger("SmallBite");
         }
-
         PoolManager.PoolInstantiate(biteAnimationPrefab, fish.position + biteNotificationOffset, Quaternion.identity);
         SetNextBiteInterval(ref fish);
     }
 
     void SetNextBiteInterval(ref ActiveFishData fish) {
         fish.timer = Random.Range(biteIntervalMin, biteIntervalMax);
+    }
+
+
+    public void StartBiteSequence() {
+
+    }
+
+    public void EndBiteSequence(BiteResult result) {
+        float buttonDisableDelay = 0f;
+        if (result == BiteResult.BiteFail) {
+            buttonDisableDelay = failButtonDisableDelay;
+        }
+        if (buttonDisableDelay == 0f) {
+            buttonSpriteRenderer.enabled = false;
+        } else {
+            _buttonDisableTimer = buttonDisableDelay;
+        }
+        DespawnFish(bitingFishID);
+        bitingFishID = -1;
     }
 
     public bool TryGetFishByID(int id, out int index, out ActiveFishData fish) {
@@ -276,7 +338,6 @@ public class FishManager : MonoBehaviour {
                 x = Mathf.Cos(angle) * radius,
                 y = Mathf.Sin(angle) * radiusHeightFactor
             };
-            // candidatePos = moveRegion.RandomInRect();
 
             // reject any positions outside of the safe area
             if (!moveRegion.Contains(candidatePos)) { continue; }
@@ -368,6 +429,40 @@ public class FishManager : MonoBehaviour {
 
         return fishData;
     }
+
+
+
+    [HideInInspector] public float _smallBiteSweetSpotTimer;
+    [HideInInspector] public float _bigBiteSweetSpotTimer;
+    public enum BiteResult {
+        SmallBiteSuccess, BigBiteSuccess, BiteFail, Invalid
+    }
+    [HideInInspector] public int _successfulSmallBites;
+    [HideInInspector] public int _failedBites = 0;
+    public BiteResult TryGetBite() {
+        BiteResult result;
+        if (bitingFishID < 0) { return BiteResult.Invalid; }
+        else if (_bigBiteSweetSpotTimer > 0f) {
+            result = BiteResult.BigBiteSuccess;
+            if (TryGetFishByID(bitingFishID, out var index, out var fish)) {
+                fish.state = FishState.OnHook;
+                fish.timer = 0f;
+                activeFish[index] = fish;
+            }
+        }
+        else if (_smallBiteSweetSpotTimer > 0f) {
+            result = BiteResult.SmallBiteSuccess;
+            _successfulSmallBites++;
+        } 
+        else {
+            result = BiteResult.BiteFail;
+            _failedBites++;
+            if (_failedBites == 3) {
+                EndBiteSequence(result);
+            }
+        }
+        return result;
+    }
 }
 
 [System.Serializable]
@@ -387,13 +482,12 @@ public struct ActiveFishData {
     public int id;
     public int biteCount;
     public float timer;
-
     public BobberBehaviour targetBobber;
 }
 
 
 public enum FishState {
-    Moving, Idle, Biting, Despawning
+    Moving, Idle, Biting, OnHook, Despawning
 }
 
 [System.Serializable]
