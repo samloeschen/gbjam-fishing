@@ -31,8 +31,8 @@ public class TimeManager : MonoBehaviour {
     const int SECONDS_IN_HOUR = 3600;
     const double MS_IN_DAY = 8.64e+7;
     void Update() {
-var time = System.DateTime.Now;
-int seconds = SECONDS_IN_HOUR * time.Hour + time.Second;
+        var time = System.DateTime.Now;
+        int seconds = SECONDS_IN_HOUR * time.Hour + time.Second;
         double t = (seconds * 1000d + (double)time.Millisecond) / 8.64e+7;
         
 #if UNITY_EDITOR

@@ -9,6 +9,15 @@ public class FishManager : MonoBehaviour {
     public GameObject fishPrefab;
     public Transform fishParentTransform;
 
+    [Header("Candidate Fish Generation")]
+    public int maxCandidateFish = 3;
+    public EnvironmentDataObject activeEnvironmentDataObject;
+    public FishDataObjectList commonFishList;
+
+    [HideInInspector]
+    public List<FishDataObject> currentPotentialFishList;
+
+
     [Header("Fish Behaviour")]
     public float newTargetPositionRadiusMin;
     public float newTargePositionRadiusMax;
@@ -75,11 +84,15 @@ public class FishManager : MonoBehaviour {
 
     List<ActiveFishData> oldFish;
 
-    
 
     void Awake() {
         activeFish = new List<ActiveFishData>(16);
         oldFish = new List<ActiveFishData>(16);
+    }
+
+    void Start() {
+        currentPotentialFishList = new List<FishDataObject>(maxCandidateFish);
+        // PopulateAllCandidates(ref currentPotentialFishList);
     }
 
     void OnEnable() {
@@ -146,6 +159,54 @@ public class FishManager : MonoBehaviour {
         }
     }
 
+    void PopulateAllCandidates(ref List<FishDataObject> candidateList) {
+        candidateList.Clear();
+        for (int i = 0; i < maxCandidateFish; i++) {
+            PopulateCandidate(ref candidateList, i);
+        }
+    }
+
+    void PopulateCandidate(ref List<FishDataObject> candidateList, int index) {
+        // try and get a fish from the environment list...
+        var newCandidate = GetCandidateFish(activeEnvironmentDataObject.data.fishSpawnList.data, candidateList);
+        
+        // failing that, get a fish from the common list
+        if (!newCandidate) {
+            newCandidate = GetCandidateFish(commonFishList.data, candidateList);
+        }
+
+        // failing THAT, get a fish from the junk list (not yet implemented)...
+
+
+        if (newCandidate) {
+            candidateList.Add(newCandidate);
+        } else {
+            Debug.LogError("COULDN'T FIND A CANDIDATE FISH! THIS SHOULDN'T HAPPEN");
+        }
+    }
+
+    FishDataObject GetCandidateFish(List<FishDataObject> fishDataObjectList, List<FishDataObject> candidateList) {
+        int hour = System.DateTime.Now.Hour;
+        FishDataObject result;
+        fishDataObjectList.Shuffle();
+        for (int i = 0; i < fishDataObjectList.Count; i++) {
+            var current = fishDataObjectList[i];
+
+            // reject any fish already present in the candidate list
+            if (candidateList.Contains(current)) { continue; }
+
+            // iterate over current's time ranges, if one overlaps the current time
+            // then this is a valid candidate and return
+            for (int j = 0; j < current.data.timeRanges.Count; j++) {
+                var timeRange = current.data.timeRanges[j];
+                if (timeRange.ContainsTime(hour)) {
+                    result = current;
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
 
     void OnDrawGizmos() {
         Gizmos.color = Color.red;
@@ -286,11 +347,6 @@ public class FishManager : MonoBehaviour {
 
     void SetNextBiteInterval(ref ActiveFishData fish) {
         fish.timer = Random.Range(biteIntervalMin, biteIntervalMax);
-    }
-
-
-    public void StartBiteSequence() {
-
     }
 
     public void EndBiteSequence(BiteResult result) {

@@ -56,7 +56,6 @@ public class BobberAimBehaviour: MonoBehaviour {
             if (_mashTimer <= 0f) {
                 FailCatch();
             }
-            Debug.Log(_mashTimer + " " + _currentMashValue);
         }
 
         if (_reelTimer > 0f) {
@@ -126,7 +125,6 @@ public class BobberAimBehaviour: MonoBehaviour {
 
     void CompleteCatch() {
         bobberBehaviour.isInWater = false;
-        Debug.Log("complete");
         mashMode = false;
         fishManager.EndBiteSequence(BiteResult.BigBiteSuccess);
         DoReel();

@@ -18,7 +18,7 @@ public class Bootstrap : MonoBehaviour {
         gameStateManager.LoadGame();
         currentEnvironment = defaultEnvironment;
         for (int i = 0; i < environmenList.Count; i++) {
-            if (gameStateManager.gameState.currentEnvironmenName == environmenList[i].reference.name) {
+            if (gameStateManager.gameState.currentEnvironmenName == environmenList[i].data.name) {
                 currentEnvironment = environmenList[i];
                 break;
             }
@@ -28,7 +28,7 @@ public class Bootstrap : MonoBehaviour {
             currentEnvironment = customEnvironment ?? currentEnvironment;
         }
 #endif
-        LoadEnvironment(currentEnvironment.reference);
+        LoadEnvironment(currentEnvironment.data);
     }
 
     void LoadEnvironment(EnvironmentData environmentData) {
@@ -37,7 +37,7 @@ public class Bootstrap : MonoBehaviour {
     }
 
     void OnDisable() {
-        gameStateManager.gameState.currentEnvironmenName = currentEnvironment.reference.name;
+        gameStateManager.gameState.currentEnvironmenName = currentEnvironment.data.name;
         gameStateManager.SaveGame();
     }
 }

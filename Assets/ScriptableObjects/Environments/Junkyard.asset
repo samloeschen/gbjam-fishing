@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1bb4abdf21734c1da7c4cce74e6ac45, type: 3}
   m_Name: Junkyard
   m_EditorClassIdentifier: 
-  reference:
+  data:
     name: Junkyard
     prefab: {fileID: 786348734271381104, guid: 34a20f65627e241b7b0b07238a37f42a, type: 3}
     sunEulers: {x: 0, y: 0, z: 0}
+    fishSpawnList: {fileID: 0}

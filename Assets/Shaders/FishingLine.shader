@@ -7,13 +7,15 @@
 
     SubShader
     {
-        Tags { "RenderType"="Transparent" }
+        Tags { "Queue"="Overlay""RenderType"="Transparent" }
         LOD 100
 
         GrabPass
         {
             "_GrabTexture"
         }
+        ZWrite Off
+        // ZTest Always
 
         Pass
         {
