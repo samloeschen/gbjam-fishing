@@ -21,6 +21,9 @@ public struct FishData {
 
     [Tooltip("The list of the fish's favorite baits")]
     public List<BaitBoostData> favoriteBait;
+
+    [System.NonSerialized]
+    public bool unlocked;
 }
 
 [System.Serializable]

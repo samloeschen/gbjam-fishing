@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee783ebdbc5f84b9ab1088a71c6a9538, type: 3}
-  m_Name: NewFishDataObject 6
+  m_Name: GroupPhotoGuy
   m_EditorClassIdentifier: 
   data:
-    name: 
-    profileSprite: {fileID: 0}
+    name: Group Photo Guy
+    profileSprite: {fileID: 21300000, guid: d4cb628c200534b2ebc6f71e58a9a33e, type: 3}
     profileText: 
     basePercentage: 0
     timeRanges: []

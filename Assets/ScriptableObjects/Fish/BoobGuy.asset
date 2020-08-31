@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee783ebdbc5f84b9ab1088a71c6a9538, type: 3}
-  m_Name: NewFishDataObject
+  m_Name: BoobGuy
   m_EditorClassIdentifier: 
   data:
-    name: 
-    profileSprite: {fileID: 0}
+    name: Boob Guy
+    profileSprite: {fileID: 21300000, guid: e8e0709894dcb426dab541ece2e7e719, type: 3}
     profileText: 
     basePercentage: 0
     timeRanges: []

@@ -9,6 +9,13 @@ public class GameStateManager: ScriptableObject {
     public GameState gameState;
     public static string SaveDir;
     public static string SavePath;
+    public static GameStateManager instance;
+
+    public FishDataObjectList allFish;
+
+    void Awake() {
+        instance = this;
+    }
 
     void OnEnable() {
         SaveDir = Application.persistentDataPath + "/SAVES";
@@ -24,7 +31,8 @@ public class GameStateManager: ScriptableObject {
             string json = File.ReadAllText(SAVE_PATH);
             gameSaveData = (GameState)StringSerializationAPI.Deserialize(typeof(GameState), json);
             return true;
-        }
+        } 
+
         return false;
     }
 
@@ -33,6 +41,9 @@ public class GameStateManager: ScriptableObject {
         if (LoadGame(out gameState)) {
             string json = File.ReadAllText(SavePath);
             gameState = (GameState)StringSerializationAPI.Deserialize(typeof(GameState), json);
+            if (gameState.unlockedFishNames == null) {
+                gameState.unlockedFishNames = new List<string>(32);
+            }
             return true;
         } else {
             gameState = new GameState();
@@ -56,21 +67,20 @@ public class GameStateManager: ScriptableObject {
 #endif
     }
 
-    public static void CreateDefaultGameState() {
-
-    }
 }
 
 [System.Serializable]
 public struct GameState {
     public string currentEnvironmenName;
+    public List<string> unlockedFishNames;
     public void Copy(GameState other) {
-
+        currentEnvironmenName = string.Copy(other.currentEnvironmenName);
+        unlockedFishNames = new List<string>(other.unlockedFishNames);
     }
-
     public static GameState CreateDefault() {
         return new GameState {
-
+            currentEnvironmenName = "",
+            unlockedFishNames = new List<string>(32),
         };
     }
 }
