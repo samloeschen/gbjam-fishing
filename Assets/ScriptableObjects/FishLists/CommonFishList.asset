@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f942bd89441094f7c968c263dc4db091, type: 3}
   m_Name: CommonFishList
   m_EditorClassIdentifier: 
-  reference: []
+  data:
+  - {fileID: 11400000, guid: 5544848b431b04cd9bae7a0171d09b43, type: 2}
+  - {fileID: 11400000, guid: 59fc90642794840edbc7b3cea11c99ac, type: 2}
+  - {fileID: 11400000, guid: f28315a60b8454e0bac4ad655874c10b, type: 2}
+  - {fileID: 11400000, guid: 75841e557a1784892b400ce0704a6e43, type: 2}
+  - {fileID: 11400000, guid: 1941e600826b84356b1747d740572e74, type: 2}

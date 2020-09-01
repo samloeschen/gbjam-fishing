@@ -7,6 +7,10 @@ public class ProbabiilityFishPortrait : MonoBehaviour {
 
     [Range(0f, 1f)]
     public float probability;
+    public float lerpSpeed;
+
+    [System.NonSerialized] public float targetProbability;
+
     public Sprite mysterySprite;
     public SpriteRenderer portraitSpriteRenderer;
     public Sprite unlockSprite;
@@ -16,7 +20,7 @@ public class ProbabiilityFishPortrait : MonoBehaviour {
     public CharArray charArray;
 
     public void SetFishDataObject(FishDataObject fishDataObject, GameState gameState, bool animate = true) {
-        if (gameState.unlockedFishNames.Contains(fishDataObject.data.name)) {
+        if (fishDataObject.data.saveData.unlocked) {
             portraitSpriteRenderer.sprite = fishDataObject.data.profileSprite;
             lockStateSpriteRenderer.sprite = unlockSprite;
         } else {
@@ -31,7 +35,12 @@ public class ProbabiilityFishPortrait : MonoBehaviour {
 
     void Update () {
         // update text
-        int textProbability = (int)(probability * 100);
+        probability = Mathf.Lerp(probability, targetProbability, Time.deltaTime * lerpSpeed);
+        if (Mathf.Abs(probability - targetProbability) * 100 < 1f) {
+            probability = targetProbability;
+        }
+
+        int textProbability = (int)Mathf.Clamp(probability * 100f, 0f, 99f);
         charArray.Clear();
         if (textProbability < 10) {
             charArray.Append(0);

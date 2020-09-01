@@ -9,6 +9,7 @@ public class GameStateManager: ScriptableObject {
     public GameState gameState;
     public static string SaveDir;
     public static string SavePath;
+    public FishDataObjectList allFish;
 
     void OnEnable() {
         SaveDir = Application.persistentDataPath + "/SAVES";
@@ -23,10 +24,36 @@ public class GameStateManager: ScriptableObject {
         if (File.Exists(SAVE_PATH)) {
             string json = File.ReadAllText(SAVE_PATH);
             gameSaveData = (GameState)StringSerializationAPI.Deserialize(typeof(GameState), json);
+            if (gameSaveData.serializedFishDataDict == null) {
+                gameSaveData.serializedFishDataDict = new Dictionary<string, SerializedFishData>(allFish.data.Count);
+            }
+            ApplySerializedFishData(allFish, gameState);
             return true;
-        } 
-
+        }
         return false;
+    }
+
+
+    public void ApplySerializedFishData(FishDataObjectList masterList, GameState gameState) {
+        var fishList = masterList.data;
+        for (int i = 0; i < fishList.Count; i++) {
+            if (gameState.serializedFishDataDict.TryGetValue(fishList[i].name, out var saveData)) {
+                fishList[i].data.saveData = saveData;
+            }
+        }
+    }
+
+    public void SerializeFishData(FishDataObjectList masterList, GameState gameState) {
+        FishData fishData;
+        for (int i = 0; i < masterList.data.Count; i++) {
+            fishData = masterList.data[i].data;
+            var serializedData = fishData.saveData;
+            if (gameState.serializedFishDataDict.ContainsKey(fishData.name)) {
+                gameState.serializedFishDataDict[fishData.name] = serializedData;
+            } else {
+                gameState.serializedFishDataDict.Add(fishData.name, serializedData);
+            }
+        }
     }
 
     public bool LoadGame(out GameState gameState, GameState fallback) {
@@ -34,8 +61,8 @@ public class GameStateManager: ScriptableObject {
         if (LoadGame(out gameState)) {
             string json = File.ReadAllText(SavePath);
             gameState = (GameState)StringSerializationAPI.Deserialize(typeof(GameState), json);
-            if (gameState.unlockedFishNames == null) {
-                gameState.unlockedFishNames = new List<string>(32);
+            if (gameState.serializedFishDataDict == null) {
+                gameState.serializedFishDataDict = new Dictionary<string, SerializedFishData>(32);
             }
             return true;
         } else {
@@ -64,17 +91,17 @@ public class GameStateManager: ScriptableObject {
 
 [System.Serializable]
 public struct GameState {
-    public string currentEnvironmenName;
+    public string lastEnvironmentName;
     public string lastBaitName;
-    public List<string> unlockedFishNames;
+    public Dictionary<string, SerializedFishData> serializedFishDataDict;
     public void Copy(GameState other) {
-        currentEnvironmenName = string.Copy(other.currentEnvironmenName);
-        unlockedFishNames = new List<string>(other.unlockedFishNames);
+        lastEnvironmentName = string.Copy(other.lastEnvironmentName);
+        serializedFishDataDict = new Dictionary<string, SerializedFishData>(other.serializedFishDataDict);
     }
     public static GameState CreateDefault() {
         return new GameState {
-            currentEnvironmenName = "",
-            unlockedFishNames = new List<string>(32),
+            lastEnvironmentName = "",
+            serializedFishDataDict = new Dictionary<string, SerializedFishData>(32),
         };
     }
 }

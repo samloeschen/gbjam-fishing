@@ -16,4 +16,4 @@ MonoBehaviour:
     name: Junkyard
     prefab: {fileID: 786348734271381104, guid: 34a20f65627e241b7b0b07238a37f42a, type: 3}
     sunEulers: {x: 0, y: 0, z: 0}
-    fishSpawnList: {fileID: 0}
+    fishSpawnList: {fileID: 11400000, guid: 396ad97ab1b5f4571a13c134bbf87201, type: 2}

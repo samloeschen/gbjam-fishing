@@ -5,10 +5,12 @@ using UnityEngine;
 public class Bootstrap : MonoBehaviour {
     public GameStateManager gameStateManager;
     public List<EnvironmentDataObject> environmenList;
-    public EnvironmentDataObject defaultEnvironment;
     public PhoneManager phoneManager;
     public bool useCustomEnvironment;
     public BaitManager baitManager;
+    public FishManager fishManager;
+
+    [Header("Environment")]
     public EnvironmentDataObject customEnvironment;
 
     [HideInInspector]
@@ -17,11 +19,16 @@ public class Bootstrap : MonoBehaviour {
 
     void Awake() {
         gameStateManager.LoadGame();
+        for (int i = 0; i < environmenList.Count; i++) {
+            if (environmenList[i].data.name == gameStateManager.gameState.lastEnvironmentName) {
+                environmenList.RemoveAt(i);
+            }
+        }
 
         // set up environment
-        currentEnvironment = defaultEnvironment;
+        currentEnvironment = environmenList.GetRandomElement();
         for (int i = 0; i < environmenList.Count; i++) {
-            if (gameStateManager.gameState.currentEnvironmenName == environmenList[i].data.name) {
+            if (gameStateManager.gameState.lastEnvironmentName == environmenList[i].data.name) {
                 currentEnvironment = environmenList[i];
                 break;
             }
@@ -33,20 +40,13 @@ public class Bootstrap : MonoBehaviour {
 #endif
         LoadEnvironment(currentEnvironment.data);
 
-        // set up fish data objects
-        var fishList = allFish.data;
-        var unlockedFishNames = gameStateManager.gameState.unlockedFishNames;
-        for (int i = 0; i < fishList.Count; i++) {
-            if (unlockedFishNames.Contains(fishList[i].data.name)) {
-                fishList[i].data.unlocked = true;
-            }
-        }
-
         // initialize phone
-        phoneManager.Initialize(fishList);
+        phoneManager.Initialize(allFish.data);
 
         // initialize game UI
         baitManager.Initialize(gameStateManager.gameState);
+
+        fishManager.Initialize(currentEnvironment.data, gameStateManager.gameState);
     }
 
     void LoadEnvironment(EnvironmentData environmentData) {
@@ -55,7 +55,7 @@ public class Bootstrap : MonoBehaviour {
     }
 
     void OnDisable() {
-        gameStateManager.gameState.currentEnvironmenName = currentEnvironment.data.name;
+        gameStateManager.gameState.lastEnvironmentName = currentEnvironment.data.name;
         gameStateManager.SaveGame();
     }
 }

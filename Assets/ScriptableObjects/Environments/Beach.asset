@@ -16,4 +16,4 @@ MonoBehaviour:
     name: Beach
     prefab: {fileID: 786348734271381104, guid: a6849e6b7c593407a94faf204ccba2fb, type: 3}
     sunEulers: {x: 0, y: 0, z: 0}
-    fishSpawnList: {fileID: 0}
+    fishSpawnList: {fileID: 11400000, guid: 396ad97ab1b5f4571a13c134bbf87201, type: 2}

@@ -22,8 +22,8 @@ public struct FishData {
     [Tooltip("The list of the fish's favorite baits")]
     public List<BaitBoostData> favoriteBait;
 
-    // [System.NonSerialized]
-    public bool unlocked;
+
+    public SerializedFishData saveData;
 }
 
 [System.Serializable]
@@ -31,6 +31,14 @@ public struct BaitBoostData {
     public BaitDataObject baitDataObject;
     [Range(0, 100)]
     public float percentageBoost;
+}
+
+[System.Serializable]
+public struct SerializedFishData {
+    public bool unlocked;
+    public int numberCaught;
+    public int numberMissed;
+    public int timeFirstCaught;
 }
 
 [System.Serializable]

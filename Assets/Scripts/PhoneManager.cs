@@ -35,8 +35,6 @@ public class PhoneManager : MonoBehaviour {
     }
 
     void Update() {
-
-
         if (Input.GetKeyDown(KeyCode.Space)) {
             if (!phoneEnabled) {
                 phoneEnabled = true;

@@ -8,14 +8,15 @@ public class FishManager : MonoBehaviour {
     public int maxFishCount;
     public GameObject fishPrefab;
     public Transform fishParentTransform;
+    public BaitManager baitManager;
+
 
     [Header("Candidate Fish Generation")]
     public int maxCandidateFish = 3;
-    public EnvironmentDataObject activeEnvironmentDataObject;
     public FishDataObjectList commonFishList;
 
     [HideInInspector]
-    public List<FishDataObject> currentPotentialFishList;
+    public List<FishDataObject> currentFishList;
 
 
     [Header("Fish Behaviour")]
@@ -28,15 +29,12 @@ public class FishManager : MonoBehaviour {
     public float avoidOtherFishWeight = 1f;
     public float avoidPreviousPositionWeight = 1f;
     public float avoidBitingFishWeight = 2f;
-    public float avoidPierWeight = 2f;
 
     [Header("UI")]
     public GameObject fishPortraitPrefab;
-    public GameObject fishPercenagePrefab;
     public Transform fishPortraitParentTransform;
     public float fishPortraitSpacing;
 
-    
 
     public Rect moveRegion;
 
@@ -90,23 +88,35 @@ public class FishManager : MonoBehaviour {
     public int bitingFishID = -1;
 
     List<ActiveFishData> oldFish;
-
+    public GameStateManager gameStateManager;
+    public float[] baseChances;
+    public float[] realChances;
+    public ProbabiilityFishPortrait[] fishPortraits;
 
     void Awake() {
         activeFish = new List<ActiveFishData>(16);
         oldFish = new List<ActiveFishData>(16);
+        baseChances = new float[maxCandidateFish];
+        realChances = new float[maxCandidateFish];
     }
 
-    void Start() {
-        currentPotentialFishList = new List<FishDataObject>(maxCandidateFish);
-        // PopulateAllCandidates(ref currentPotentialFishList);
+    public void Initialize(EnvironmentData environment, GameState gameState) {
+        currentFishList = new List<FishDataObject>(maxCandidateFish);
+        PopulateAllCandidates(ref currentFishList, environment.fishSpawnList.data);
 
         // spawn fish portraits
-
         Vector3 offset = Vector3.zero;
-        for (int i = 0; i < maxCandidateFish; i++) {
-            GameObject.Instantiate(fishPortraitPrefab, fishPortraitParentTransform.position + offset, Quaternion.identity, fishPortraitParentTransform);
+                fishPortraits = new ProbabiilityFishPortrait[maxCandidateFish];
+
+        for (int i = 0; i < currentFishList.Count; i++) {
+            var clone = GameObject.Instantiate(fishPortraitPrefab, fishPortraitParentTransform.position + offset, Quaternion.identity, fishPortraitParentTransform);
             offset += Vector3.down * fishPortraitSpacing;
+
+            if (clone.TryGetComponent<ProbabiilityFishPortrait>(out var fishPortrait)) {
+                fishPortrait.SetFishDataObject(currentFishList[i], gameState, animate: false);
+                Debug.Log(i);
+                fishPortraits[i] = fishPortrait;
+            }
         }
     }
 
@@ -172,18 +182,39 @@ public class FishManager : MonoBehaviour {
                 buttonSpriteRenderer.enabled = false;
             }
         }
-    }
 
-    void PopulateAllCandidates(ref List<FishDataObject> candidateList) {
-        candidateList.Clear();
+        // update fish percentages
+        FishData fishData;
+        float baseChance = 0f;
+        float totalChance = 0f;
         for (int i = 0; i < maxCandidateFish; i++) {
-            PopulateCandidate(ref candidateList, i);
+            fishData = currentFishList[i].data;
+            baseChance = fishData.basePercentage;
+            for (int j = 0; j < (fishData.favoriteBait?.Count ?? 0); j++) {
+                if (fishData.favoriteBait[j].baitDataObject == baitManager.selectedBait) {
+                    baseChance += fishData.favoriteBait[j].percentageBoost;
+                }
+            }
+            baseChances[i] = baseChance;
+            totalChance += baseChance;
+        }
+
+        for (int i = 0; i < maxCandidateFish; i++) {
+            realChances[i] = baseChances[i] / totalChance;
+            fishPortraits[i].targetProbability = realChances[i];
         }
     }
 
-    void PopulateCandidate(ref List<FishDataObject> candidateList, int index) {
+    void PopulateAllCandidates(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList) {
+        candidateList.Clear();
+        for (int i = 0; i < maxCandidateFish; i++) {
+            PopulateCandidate(ref candidateList, environmentList, i);
+        }
+    }
+
+    void PopulateCandidate(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList, int index) {
         // try and get a fish from the environment list...
-        var newCandidate = GetCandidateFish(activeEnvironmentDataObject.data.fishSpawnList.data, candidateList);
+        var newCandidate = GetCandidateFish(environmentList, candidateList);
         
         // failing that, get a fish from the common list
         if (!newCandidate) {
@@ -199,20 +230,22 @@ public class FishManager : MonoBehaviour {
         }
     }
 
-
-
-    FishDataObject GetCandidateFish(List<FishDataObject> fishDataObjectList, List<FishDataObject> candidateList) {
+    FishDataObject GetCandidateFish(List<FishDataObject> candidateList, List<FishDataObject> omitList) {
         int hour = System.DateTime.Now.Hour;
         FishDataObject result;
-        fishDataObjectList.Shuffle();
-        for (int i = 0; i < fishDataObjectList.Count; i++) {
-            var current = fishDataObjectList[i];
+        candidateList.Shuffle();
+
+        for (int i = 0; i < candidateList.Count; i++) {
+            var current = candidateList[i];
 
             // reject any fish already present in the candidate list
-            if (candidateList.Contains(current)) { continue; }
+            if (omitList.Contains(current)) { continue; }
 
             // iterate over current's time ranges, if one overlaps the current time
             // then this is a valid candidate and return
+            if (current.data.timeRanges.Count == 0) {
+                return current;
+            }
             for (int j = 0; j < current.data.timeRanges.Count; j++) {
                 var timeRange = current.data.timeRanges[j];
                 if (timeRange.ContainsTime(hour)) {
@@ -571,4 +604,10 @@ public struct FishBehaviour {
     [Range(0f, 1f)]
     public float bigBiteChance;
     public AnimationCurve moveSpeedCurve;
+}
+
+
+public struct FishChanceData {
+    public FishDataObject fish;
+    public float currentChance;
 }
