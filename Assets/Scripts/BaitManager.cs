@@ -7,9 +7,19 @@ public class BaitManager : MonoBehaviour {
     [HideInInspector] public BaitDataObject selectedBait;
     [HideInInspector] public int selectedBaitIndex;
     public SpriteRenderer spriteRenderer;
+    public Animator baitParentAnimator;
     public Animator leftArrowAnimator;
     public Animator rightArrowAnimator;
     public Animator baitSpriteAnimator;
+
+    void OnEnable() {
+        baitParentAnimator.SetTrigger("Show");
+    }
+
+    void OnDisable() {
+        baitParentAnimator.SetTrigger("Hide");
+    }
+
     public void Initialize(GameState gameState) {
         for (int i = 0; i < baitDataObjects.Count; i++) {
             if (baitDataObjects[i].data.name == gameState.lastBaitName) {
@@ -32,7 +42,6 @@ public class BaitManager : MonoBehaviour {
             leftArrowAnimator.SetTrigger("Press");
             baitSpriteAnimator.SetTrigger("Press");
         }
-
         if (Input.GetKeyDown(KeyCode.S)) {
             SelectBait(selectedBaitIndex + 1);
             rightArrowAnimator.SetTrigger("Press");

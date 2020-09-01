@@ -30,6 +30,13 @@ public class FishManager : MonoBehaviour {
     public float avoidBitingFishWeight = 2f;
     public float avoidPierWeight = 2f;
 
+    [Header("UI")]
+    public GameObject fishPortraitPrefab;
+    public GameObject fishPercenagePrefab;
+    public Transform fishPortraitParentTransform;
+    public float fishPortraitSpacing;
+
+    
 
     public Rect moveRegion;
 
@@ -93,6 +100,14 @@ public class FishManager : MonoBehaviour {
     void Start() {
         currentPotentialFishList = new List<FishDataObject>(maxCandidateFish);
         // PopulateAllCandidates(ref currentPotentialFishList);
+
+        // spawn fish portraits
+
+        Vector3 offset = Vector3.zero;
+        for (int i = 0; i < maxCandidateFish; i++) {
+            GameObject.Instantiate(fishPortraitPrefab, fishPortraitParentTransform.position + offset, Quaternion.identity, fishPortraitParentTransform);
+            offset += Vector3.down * fishPortraitSpacing;
+        }
     }
 
     void OnEnable() {
@@ -177,13 +192,14 @@ public class FishManager : MonoBehaviour {
 
         // failing THAT, get a fish from the junk list (not yet implemented)...
 
-
         if (newCandidate) {
             candidateList.Add(newCandidate);
         } else {
             Debug.LogError("COULDN'T FIND A CANDIDATE FISH! THIS SHOULDN'T HAPPEN");
         }
     }
+
+
 
     FishDataObject GetCandidateFish(List<FishDataObject> fishDataObjectList, List<FishDataObject> candidateList) {
         int hour = System.DateTime.Now.Hour;

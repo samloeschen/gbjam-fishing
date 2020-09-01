@@ -8,7 +8,7 @@ public class BobberAimBehaviour: MonoBehaviour {
     public RodBehaviour rodBehaviour; 
     public BobberBehaviour bobberBehaviour;
     public FishManager fishManager;
-    
+    public BaitManager baitManager;
     public float moveSpeed;
 
 
@@ -32,8 +32,13 @@ public class BobberAimBehaviour: MonoBehaviour {
         reticleMover.gameObject.SetActive(true);
     }
 
+    bool _isQuitting = false;
+    void OnApplicationQuit() {
+        _isQuitting = true;
+    }
+
     void OnDisable() {
-        if (!(reticleMover is null)) {
+        if (!_isQuitting) {
             reticleMover.gameObject.SetActive(false);
         }
     }
@@ -86,6 +91,7 @@ public class BobberAimBehaviour: MonoBehaviour {
                 rodBehaviour.HandleInput(RodAction.Cast);
                 reticleMover.gameObject.SetActive(false);
                 bobberBehaviour.targetPosition = reticleMover.position;
+                baitManager.enabled = false;
             }
             else if (rodBehaviour.currentState == RodState.WaitingForBite) {
                 var biteResult = fishManager.TryGetBite();
@@ -117,7 +123,7 @@ public class BobberAimBehaviour: MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.C)) {
             buttonIndicatorAnimator.SetTrigger("Reset");
             if (rodBehaviour.currentState == RodState.WaitingForBite) {
-                rodBehaviour.HandleInput(RodAction.Reel);
+                DoReel();
                 fishManager.HandleReel();
             }
             reticleMover.gameObject.SetActive(true);
@@ -150,6 +156,7 @@ public class BobberAimBehaviour: MonoBehaviour {
         }
         buttonIndicatorAnimator.SetTrigger("Reset");
         reticleMover.gameObject.SetActive(true);
+        baitManager.enabled = true;
     }
 
     void StartMashMode() {
