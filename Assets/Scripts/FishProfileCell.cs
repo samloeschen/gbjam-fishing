@@ -11,7 +11,7 @@ public class FishProfileCell : MonoBehaviour {
     public FishDataObject fishDataObject;
     public void Initialize(FishDataObject fishDataObject) {
         this.fishDataObject = fishDataObject;
-        image.sprite = fishDataObject.data.profileSprite;
-        // image.sprite = fishDataObject.data.unlocked ? fishDataObject.data.profileSprite : lockedSprite;
+        // image.sprite = fishDataObject.data.profileSprite;
+        image.sprite = fishDataObject.data.unlocked ? fishDataObject.data.profileSprite : lockedSprite;
     }
 }

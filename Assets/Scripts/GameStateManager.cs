@@ -9,13 +9,6 @@ public class GameStateManager: ScriptableObject {
     public GameState gameState;
     public static string SaveDir;
     public static string SavePath;
-    public static GameStateManager instance;
-
-    public FishDataObjectList allFish;
-
-    void Awake() {
-        instance = this;
-    }
 
     void OnEnable() {
         SaveDir = Application.persistentDataPath + "/SAVES";
@@ -72,6 +65,7 @@ public class GameStateManager: ScriptableObject {
 [System.Serializable]
 public struct GameState {
     public string currentEnvironmenName;
+    public string lastBaitName;
     public List<string> unlockedFishNames;
     public void Copy(GameState other) {
         currentEnvironmenName = string.Copy(other.currentEnvironmenName);

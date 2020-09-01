@@ -9,14 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee783ebdbc5f84b9ab1088a71c6a9538, type: 3}
-  m_Name: Weeb
+  m_Script: {fileID: 11500000, guid: 333502e6d28ee4f658eb933a74a604ce, type: 3}
+  m_Name: EGirl
   m_EditorClassIdentifier: 
   data:
-    name: Weeb
-    profileSprite: {fileID: 21300000, guid: ed649560cd1a841e8aefef853121a288, type: 3}
-    profileText: 
-    basePercentage: 0
-    timeRanges: []
-    favoriteBait: []
-    unlocked: 1
+    name: E-GIrl
+    uiSprite: {fileID: 21300000, guid: 081decc65638f438e9dafbafb997d33d, type: 3}

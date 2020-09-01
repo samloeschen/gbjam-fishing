@@ -28,6 +28,15 @@ public class BobberAimBehaviour: MonoBehaviour {
 
     float _reelTimer;
 
+    void OnEnable() {
+        reticleMover.gameObject.SetActive(true);
+    }
+
+    void OnDisable() {
+        if (!(reticleMover is null)) {
+            reticleMover.gameObject.SetActive(false);
+        }
+    }
 
     void FixedUpdate() {
         Vector2 delta = Vector2.zero;

@@ -8,6 +8,7 @@ public class Bootstrap : MonoBehaviour {
     public EnvironmentDataObject defaultEnvironment;
     public PhoneManager phoneManager;
     public bool useCustomEnvironment;
+    public BaitManager baitManager;
     public EnvironmentDataObject customEnvironment;
 
     [HideInInspector]
@@ -45,6 +46,7 @@ public class Bootstrap : MonoBehaviour {
         phoneManager.Initialize(fishList);
 
         // initialize game UI
+        baitManager.Initialize(gameStateManager.gameState);
     }
 
     void LoadEnvironment(EnvironmentData environmentData) {
