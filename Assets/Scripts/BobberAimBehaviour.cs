@@ -63,6 +63,7 @@ public class BobberAimBehaviour: MonoBehaviour {
 
     void Update () {
 
+        // TODO move this logic to fish manager
         if (mashMode) {
             _currentMashValue -= mashDecayRate * Time.deltaTime;
             _currentMashValue = Mathf.Max(_currentMashValue, 0f);
@@ -134,14 +135,14 @@ public class BobberAimBehaviour: MonoBehaviour {
         bobberBehaviour.isInWater = false;
         mashMode = false;
         buttonIndicatorAnimator.SetTrigger("BadPress");
-        fishManager.EndBiteSequence(BiteResult.BiteFail);
+        fishManager.EndBiteSequence(MashResult.Fail);
         DoReel(delay: 0.35f);
     }
 
     void CompleteCatch() {
         bobberBehaviour.isInWater = false;
         mashMode = false;
-        fishManager.EndBiteSequence(BiteResult.BigBiteSuccess);
+        fishManager.EndBiteSequence(MashResult.Success);
         DoReel();
     }
 

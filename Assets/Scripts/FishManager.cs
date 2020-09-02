@@ -98,11 +98,16 @@ public class FishManager : MonoBehaviour {
         oldFish = new List<ActiveFishData>(16);
         baseChances = new float[maxCandidateFish];
         realChances = new float[maxCandidateFish];
+        _randomIndexes = new int[maxCandidateFish];
+
+        for (int i = 0; i < maxCandidateFish; i++) {
+            _randomIndexes[i] = i;
+        }
     }
 
     public void Initialize(EnvironmentData environment, GameState gameState) {
         currentFishList = new List<FishDataObject>(maxCandidateFish);
-        PopulateAllCandidates(ref currentFishList, environment.fishSpawnList.data);
+        PopulateAllCandidateFish(ref currentFishList, environment.fishSpawnList.data);
 
         // spawn fish portraits
         Vector3 offset = Vector3.zero;
@@ -118,6 +123,31 @@ public class FishManager : MonoBehaviour {
                 fishPortraits[i] = fishPortrait;
             }
         }
+    }
+
+    int[] _randomIndexes;
+    public FishDataObject GetRandomFish() {
+        _randomIndexes.Shuffle();
+        float r = Random.value;
+        int randomIndex = 0;
+        for (int i = 0; i < maxCandidateFish; i++) {
+            if (r < realChances[_randomIndexes[i]]) {
+                randomIndex = i;
+                break;
+            }
+        }
+        return currentFishList[randomIndex];
+    }
+
+
+    public void CatchFish(FishDataObject fish) {
+        fish.data.saveData.unlocked = true;
+        fish.data.saveData.timeFirstCaught = System.DateTime.Now.Hour;
+        fish.data.saveData.numberCaught++;
+    }
+
+    public void MissFish(FishDataObject fish) {
+
     }
 
     void OnEnable() {
@@ -205,14 +235,15 @@ public class FishManager : MonoBehaviour {
         }
     }
 
-    void PopulateAllCandidates(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList) {
+    void PopulateAllCandidateFish(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList) {
         candidateList.Clear();
         for (int i = 0; i < maxCandidateFish; i++) {
-            PopulateCandidate(ref candidateList, environmentList, i);
+            GetCandidateFish(ref candidateList, environmentList, i);
         }
+        candidateList.Shuffle();
     }
 
-    void PopulateCandidate(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList, int index) {
+    void GetCandidateFish(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList, int index) {
         // try and get a fish from the environment list...
         var newCandidate = GetCandidateFish(environmentList, candidateList);
         
@@ -398,11 +429,21 @@ public class FishManager : MonoBehaviour {
         fish.timer = Random.Range(biteIntervalMin, biteIntervalMax);
     }
 
-    public void EndBiteSequence(BiteResult result) {
+    public void EndBiteSequence(MashResult result) {
         float buttonDisableDelay = 0f;
-        if (result == BiteResult.BiteFail) {
+        switch (result) {
+        
+        case MashResult.Success:
+            CatchFish(GetRandomFish());
+        break;
+
+        case MashResult.Fail:
             buttonDisableDelay = failButtonDisableDelay;
+            MissFish(GetRandomFish());
+        break;
+        
         }
+
         if (buttonDisableDelay == 0f) {
             buttonSpriteRenderer.enabled = false;
         } else {
@@ -520,7 +561,7 @@ public class FishManager : MonoBehaviour {
         ActiveFishData fishData = new ActiveFishData {
             state     = FishState.Idle,
             behaviour = fishBehaviours.GetRandomWithSwapback(),
-            id        = _fishID++
+            id        = _fishID++,
         };
         var clone = PoolManager.PoolInstantiate(fishPrefab, Vector2.zero, Quaternion.identity);
         clone.TryGetComponent<Transform>(out fishData.transform);
@@ -541,6 +582,9 @@ public class FishManager : MonoBehaviour {
     [HideInInspector] public float _bigBiteSweetSpotTimer;
     public enum BiteResult {
         SmallBiteSuccess, BigBiteSuccess, BiteFail, Invalid
+    }
+    public enum MashResult {
+        Success, Fail
     }
     [HideInInspector] public int _successfulSmallBites;
     [HideInInspector] public int _failedBites = 0;
@@ -582,7 +626,6 @@ public struct ActiveFishData {
         set { transform.localPosition = value; }
     }
     public FishBehaviour behaviour;
-
     public FishState state;
     public int id;
     public int biteCount;

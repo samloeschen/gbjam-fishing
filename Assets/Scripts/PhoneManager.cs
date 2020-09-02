@@ -37,16 +37,24 @@ public class PhoneManager : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             if (!phoneEnabled) {
-                phoneEnabled = true;
-                phoneAnimator.SetTrigger("PhoneTransition");
-                phoneAnimator.SetBool("PhoneEnabled", true);
-                aimBehaviour.enabled = false;
+                Hide();
             } else {
-                phoneEnabled = false;
-                phoneAnimator.SetTrigger("PhoneTransition");
-                phoneAnimator.SetBool("PhoneEnabled", false);
-                aimBehaviour.enabled = true;
+                Show();
             }
         }
+    }
+
+    public void Show() {
+        phoneEnabled = true;
+        phoneAnimator.SetTrigger("PhoneTransition");
+        phoneAnimator.SetBool("PhoneEnabled", true);
+        aimBehaviour.enabled = false;
+    }
+
+    public void Hide() {
+        phoneEnabled = false;
+        phoneAnimator.SetTrigger("PhoneTransition");
+        phoneAnimator.SetBool("PhoneEnabled", false);
+        aimBehaviour.enabled = true;
     }
 }
