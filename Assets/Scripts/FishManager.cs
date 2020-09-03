@@ -89,8 +89,8 @@ public class FishManager : MonoBehaviour {
     public int bitingFishID = -1;
 
     List<ActiveFishData> oldFish;
-    public float[] baseChances;
-    public float[] realChances;
+    public float[] baseProbabilities;
+    public float[] realProbabilities;
     public ProbabiilityFishPortrait[] fishPortraits;
     [System.NonSerialized] public EnvironmentData environmentData;
 
@@ -103,8 +103,8 @@ public class FishManager : MonoBehaviour {
         activeFish = new List<ActiveFishData>(16);
         oldFish = new List<ActiveFishData>(16);
         _spawnQueue = new List<float>(64);
-        baseChances = new float[maxCandidateFish];
-        realChances = new float[maxCandidateFish];
+        baseProbabilities = new float[maxCandidateFish];
+        realProbabilities = new float[maxCandidateFish];
         _randomIndexes = new int[maxCandidateFish];
         fishPortraits = new ProbabiilityFishPortrait[maxCandidateFish];
 
@@ -120,6 +120,7 @@ public class FishManager : MonoBehaviour {
         Vector3 offset = Vector3.zero;
                 fishPortraits = new ProbabiilityFishPortrait[maxCandidateFish];
 
+        UpdateProbabilities();
         for (int i = 0; i < currentFishList.Count; i++) {
             var clone = GameObject.Instantiate(fishPortraitPrefab, fishPortraitParentTransform.position + offset, Quaternion.identity, fishPortraitParentTransform);
             offset += Vector3.down * fishPortraitSpacing;
@@ -128,6 +129,7 @@ public class FishManager : MonoBehaviour {
                 fishPortrait.gameStateManager = gameStateManager;
                 fishPortrait.SetFishDataObject(currentFishList[i], animate: false);
                 fishPortraits[i] = fishPortrait;
+                fishPortrait.targetProbability = fishPortrait.probability = realProbabilities[i];
             }
         }
     }
@@ -136,10 +138,10 @@ public class FishManager : MonoBehaviour {
     public int GetRandomFishIndex() {
         _randomIndexes.Shuffle();
         float r = Random.value;
-        float cumulativeChance = 0f;
+        float cumulativeProbability = 0f;
         for (int i = 0; i < maxCandidateFish; i++) {
-            cumulativeChance += realChances[_randomIndexes[i]];
-            if (r < cumulativeChance) {
+            cumulativeProbability += realProbabilities[_randomIndexes[i]];
+            if (r < cumulativeProbability) {
                 return _randomIndexes[i];
             }
         }
@@ -251,25 +253,30 @@ public class FishManager : MonoBehaviour {
             }
         }
 
+        UpdateProbabilities();
+        for (int i = 0; i < maxCandidateFish; i++) {
+            fishPortraits[i].targetProbability = realProbabilities[i];
+        }
+    }
+
+    void UpdateProbabilities() {
         // update fish percentages
         FishData fishData;
-        float baseChance = 0f;
-        float totalChance = 0f;
+        float baseProbability = 0f;
+        float totalProbability = 0f;
         for (int i = 0; i < maxCandidateFish; i++) {
             fishData = currentFishList[i].data;
-            baseChance = fishData.basePercentage;
+            baseProbability = fishData.basePercentage;
             for (int j = 0; j < (fishData.favoriteBait?.Count ?? 0); j++) {
                 if (fishData.favoriteBait[j].baitDataObject == baitManager.selectedBait) {
-                    baseChance += fishData.favoriteBait[j].percentageBoost;
+                    baseProbability += fishData.favoriteBait[j].percentageBoost;
                 }
             }
-            baseChances[i] = baseChance;
-            totalChance += baseChance;
+            baseProbabilities[i] = baseProbability;
+            totalProbability += baseProbability;
         }
-
         for (int i = 0; i < maxCandidateFish; i++) {
-            realChances[i] = baseChances[i] / totalChance;
-            fishPortraits[i].targetProbability = realChances[i];
+            realProbabilities[i] = baseProbabilities[i] / totalProbability;
         }
     }
 
