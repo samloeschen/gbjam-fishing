@@ -16,6 +16,13 @@ MonoBehaviour:
     name: LinkedIn Guy
     profileSprite: {fileID: 21300000, guid: c03ffc6e9fc47487e9ba34033b771f84, type: 3}
     profileText: 
-    basePercentage: 0
+    basePercentage: 15.4
     timeRanges: []
-    favoriteBait: []
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
+      percentageBoost: 32.4
+    saveData:
+      unlocked: 1
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaught: 0

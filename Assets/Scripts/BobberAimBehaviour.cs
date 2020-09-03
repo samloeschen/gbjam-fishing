@@ -29,7 +29,9 @@ public class BobberAimBehaviour: MonoBehaviour {
     float _reelTimer;
 
     void OnEnable() {
-        reticleMover.gameObject.SetActive(true);
+        if (rodBehaviour.currentState == RodState.Idle) {
+            reticleMover.gameObject.SetActive(true);
+        }
     }
 
     bool _isQuitting = false;
@@ -132,17 +134,19 @@ public class BobberAimBehaviour: MonoBehaviour {
     }
 
     void FailCatch() {
+        Debug.Log("Fail :(");
         bobberBehaviour.isInWater = false;
         mashMode = false;
         buttonIndicatorAnimator.SetTrigger("BadPress");
-        fishManager.EndBiteSequence(MashResult.Fail);
+        fishManager.EndBiteSequence(CatchResult.Fail);
         DoReel(delay: 0.35f);
     }
 
     void CompleteCatch() {
+        Debug.Log("Success!!!!");
         bobberBehaviour.isInWater = false;
         mashMode = false;
-        fishManager.EndBiteSequence(MashResult.Success);
+        fishManager.EndBiteSequence(CatchResult.Success);
         DoReel();
     }
 

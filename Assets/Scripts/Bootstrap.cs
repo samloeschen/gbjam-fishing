@@ -46,7 +46,7 @@ public class Bootstrap : MonoBehaviour {
         // initialize game UI
         baitManager.Initialize(gameStateManager.gameState);
 
-        fishManager.Initialize(currentEnvironment.data, gameStateManager.gameState);
+        fishManager.Initialize(currentEnvironment.data, gameStateManager);
     }
 
     void LoadEnvironment(EnvironmentData environmentData) {

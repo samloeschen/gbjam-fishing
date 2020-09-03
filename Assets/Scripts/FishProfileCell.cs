@@ -6,12 +6,16 @@ using UnityEngine.UI;
 public class FishProfileCell : MonoBehaviour {
     public Sprite lockedSprite;
     public Image image;
-
-    // [System.NonSerialized]
+    [System.NonSerialized] 
     public FishDataObject fishDataObject;
+    public RectTransform rectTransform;
+
+
+    void OnEnable() {
+        rectTransform = GetComponent<RectTransform>();
+    }
     public void Initialize(FishDataObject fishDataObject) {
         this.fishDataObject = fishDataObject;
-        // image.sprite = fishDataObject.data.profileSprite;
         image.sprite = fishDataObject.data.saveData.unlocked ? fishDataObject.data.profileSprite : lockedSprite;
     }
 }

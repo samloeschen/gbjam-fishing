@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: GameStateManager
   m_EditorClassIdentifier: 
   gameState:
-    currentEnvironmenName: 
+    lastEnvironmentName: Beach
+    lastBaitName: 
+  allFish: {fileID: 11400000, guid: 610f0b31aba604094a2ef774c837138c, type: 2}

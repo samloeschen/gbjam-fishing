@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -17,9 +18,20 @@ public class ProbabiilityFishPortrait : MonoBehaviour {
     public Sprite lockSprite;
     public SpriteRenderer lockStateSpriteRenderer;
     public TextMeshPro probabilityTMPro;
-    public CharArray charArray;
+    public CharArray charArray;    
+    public FishDataObject nextFishObject;
 
-    public void SetFishDataObject(FishDataObject fishDataObject, GameState gameState, bool animate = true) {
+    public event Action<PortraitAnimationEvent> onAnimationEvent;
+    [System.NonSerialized] public GameStateManager gameStateManager;
+    public Animator animator;
+
+    public void SetFishDataObject(FishDataObject fishDataObject, bool animate = false) {
+        if (animate) {
+            nextFishObject = fishDataObject;
+            animator.SetTrigger("ChangeFish");
+            return;
+        }
+        var gameState = gameStateManager.gameState;
         if (fishDataObject.data.saveData.unlocked) {
             portraitSpriteRenderer.sprite = fishDataObject.data.profileSprite;
             lockStateSpriteRenderer.sprite = unlockSprite;
@@ -31,6 +43,16 @@ public class ProbabiilityFishPortrait : MonoBehaviour {
 
     void Awake() {
         charArray = new CharArray(4);
+    }
+
+    void Start() {
+        onAnimationEvent += (PortraitAnimationEvent e) => {
+            switch (e) {
+                case PortraitAnimationEvent.ChangeFishObject:
+                    SetFishDataObject(nextFishObject, animate: false);
+                break;
+            }
+        };
     }
 
     void Update () {
@@ -46,8 +68,18 @@ public class ProbabiilityFishPortrait : MonoBehaviour {
             charArray.Append(0);
         }
         charArray.Append(textProbability);
-        charArray.Add('%');
+        charArray.Append('%');
 
         probabilityTMPro.SetCharArray(charArray.GetArray(), 0, charArray.count);
     }
+
+    public void AnimationEventHook(PortraitAnimationEvent e) {
+        if (onAnimationEvent != null) {
+            onAnimationEvent(e);
+        }
+    }
+}
+
+public enum PortraitAnimationEvent {
+    ChangeFishObject
 }

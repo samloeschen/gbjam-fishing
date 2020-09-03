@@ -16,6 +16,13 @@ MonoBehaviour:
     name: Threesome Left
     profileSprite: {fileID: 21300000, guid: 3faeac63ec97f4bba9acea8465220dee, type: 3}
     profileText: 
-    basePercentage: 0
+    basePercentage: 20.5
     timeRanges: []
-    favoriteBait: []
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
+      percentageBoost: 25
+    saveData:
+      unlocked: 1
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaught: 0

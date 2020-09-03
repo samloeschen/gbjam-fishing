@@ -16,6 +16,13 @@ MonoBehaviour:
     name: Boob Guy
     profileSprite: {fileID: 21300000, guid: e8e0709894dcb426dab541ece2e7e719, type: 3}
     profileText: 
-    basePercentage: 0
+    basePercentage: 31.8
     timeRanges: []
-    favoriteBait: []
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
+      percentageBoost: 32.9
+    saveData:
+      unlocked: 1
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaught: 0

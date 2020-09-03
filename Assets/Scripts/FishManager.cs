@@ -9,6 +9,7 @@ public class FishManager : MonoBehaviour {
     public GameObject fishPrefab;
     public Transform fishParentTransform;
     public BaitManager baitManager;
+    public PhoneManager phoneManager;
 
 
     [Header("Candidate Fish Generation")]
@@ -34,8 +35,6 @@ public class FishManager : MonoBehaviour {
     public GameObject fishPortraitPrefab;
     public Transform fishPortraitParentTransform;
     public float fishPortraitSpacing;
-
-
     public Rect moveRegion;
 
     [Header("Fish Spawning")]
@@ -53,6 +52,7 @@ public class FishManager : MonoBehaviour {
 
     float _queuedFishTimer;
     int _queuedFishCount;
+    List<float> _spawnQueue;
 
     [Header("Fish Despawning")]
     public float poolDelay;
@@ -65,6 +65,7 @@ public class FishManager : MonoBehaviour {
     public float smallBiteSweetSpotDuration;
     public float bigBiteSweetSpotDuration;
     public float failButtonDisableDelay;
+    public float newFishShowPhoneDelay;
     float _buttonDisableTimer;
     public Vector2 bobberOffset;
     public Vector2 biteNotificationOffset;
@@ -88,26 +89,32 @@ public class FishManager : MonoBehaviour {
     public int bitingFishID = -1;
 
     List<ActiveFishData> oldFish;
-    public GameStateManager gameStateManager;
     public float[] baseChances;
     public float[] realChances;
     public ProbabiilityFishPortrait[] fishPortraits;
+    [System.NonSerialized] public EnvironmentData environmentData;
 
     void Awake() {
+
+    }
+
+    public void Initialize(EnvironmentData environmentData, GameStateManager gameStateManager) {
+
         activeFish = new List<ActiveFishData>(16);
         oldFish = new List<ActiveFishData>(16);
+        _spawnQueue = new List<float>(64);
         baseChances = new float[maxCandidateFish];
         realChances = new float[maxCandidateFish];
         _randomIndexes = new int[maxCandidateFish];
+        fishPortraits = new ProbabiilityFishPortrait[maxCandidateFish];
 
         for (int i = 0; i < maxCandidateFish; i++) {
             _randomIndexes[i] = i;
         }
-    }
 
-    public void Initialize(EnvironmentData environment, GameState gameState) {
+        this.environmentData = environmentData;
         currentFishList = new List<FishDataObject>(maxCandidateFish);
-        PopulateAllCandidateFish(ref currentFishList, environment.fishSpawnList.data);
+        PopulateAllCandidateFish(ref currentFishList, environmentData.fishSpawnList.data);
 
         // spawn fish portraits
         Vector3 offset = Vector3.zero;
@@ -118,45 +125,83 @@ public class FishManager : MonoBehaviour {
             offset += Vector3.down * fishPortraitSpacing;
 
             if (clone.TryGetComponent<ProbabiilityFishPortrait>(out var fishPortrait)) {
-                fishPortrait.SetFishDataObject(currentFishList[i], gameState, animate: false);
-                Debug.Log(i);
+                fishPortrait.gameStateManager = gameStateManager;
+                fishPortrait.SetFishDataObject(currentFishList[i], animate: false);
                 fishPortraits[i] = fishPortrait;
             }
         }
     }
 
     int[] _randomIndexes;
-    public FishDataObject GetRandomFish() {
+    public int GetRandomFishIndex() {
         _randomIndexes.Shuffle();
         float r = Random.value;
-        int randomIndex = 0;
+        float cumulativeChance = 0f;
         for (int i = 0; i < maxCandidateFish; i++) {
-            if (r < realChances[_randomIndexes[i]]) {
-                randomIndex = i;
-                break;
+            cumulativeChance += realChances[_randomIndexes[i]];
+            if (r < cumulativeChance) {
+                return _randomIndexes[i];
             }
         }
-        return currentFishList[randomIndex];
+        return -1;
     }
 
+    public void CatchFish(int fishIndex) {
+        Debug.Log(fishIndex);
+        CatchFish(currentFishList[fishIndex]);
+        ChangeFish(fishIndex);
+    }
 
     public void CatchFish(FishDataObject fish) {
+        if (!fish.data.saveData.unlocked) {
+            // show phone and stuff
+            phoneManager.UpdateProfileCell(fish);
+            phoneManager.Show(delay: newFishShowPhoneDelay);
+        }
         fish.data.saveData.unlocked = true;
         fish.data.saveData.timeFirstCaught = System.DateTime.Now.Hour;
         fish.data.saveData.numberCaught++;
     }
 
+    public void MissFish(int fishIndex) {
+        MissFish(currentFishList[fishIndex]);
+        ChangeFish(fishIndex);
+    }
     public void MissFish(FishDataObject fish) {
+        fish.data.saveData.numberMissed++;
+    }
 
+    public void ChangeFish(int fishIndex) {
+        currentFishList.RemoveAt(fishIndex);
+        List<FishDataObject> environmentList = environmentData.fishSpawnList.data;
+        FishDataObject newFish = GetCandidateFish(currentFishList, environmentList);
+        currentFishList.Insert(fishIndex, newFish);
+        var portrait = fishPortraits[fishIndex];
+        portrait.SetFishDataObject(newFish, animate: true);
     }
 
     void OnEnable() {
         activeFish.Clear();
-        StartCoroutine(InitialSpawnRoutine());
         buttonSpriteRenderer.enabled = false;
     }
 
+    void Start() {
+        SetupInitialSpawn();
+    }
+
     void Update() {
+        for (int i = 0; i < _spawnQueue.Count; i++) {
+            float t = _spawnQueue[i];
+            t -= Time.deltaTime;
+            if (t <= 0f) {
+                activeFish.Add(SpawnFish());
+                _spawnQueue.RemoveAt(i);
+                i--;
+            } else {
+                _spawnQueue[i] = t;
+            }
+        }
+
         ActiveFishData fish;
         for (int i = 0; i < activeFish.Count; i++) {
             fish = activeFish[i];
@@ -176,25 +221,18 @@ public class FishManager : MonoBehaviour {
             } else {
                 oldFish[i] = fish;
             }
-        } 
+        }
         // spawn new fish if needed
-        if (activeFish.Count < maxFishCount && _queuedFishTimer <= 0f) {
+        if (activeFish.Count + _spawnQueue.Count < maxFishCount) {
             float shortInterval = Random.Range(shortSpawnIntervalMin, shortSpawnIntervalMax);
             float longInterval = Random.Range(longSpawnIntervalMin, longSpawnIntervalMax);
             float spawnInterval = shortInterval;
-            if (activeFish.Count + _queuedFishCount == 0) {
+            if (activeFish.Count == 0) {
                 spawnInterval = longInterval;
             } else if (Random.value < 0.5f) {
                 spawnInterval = longInterval;
             }
-            _queuedFishTimer += spawnInterval;
-        }
-
-        if (_queuedFishTimer > 0f) {
-            _queuedFishTimer -= Time.deltaTime;
-            if (_queuedFishTimer <= 0f) {
-                activeFish.Add(SpawnFish());
-            }
+            _spawnQueue.Add(spawnInterval);
         }
 
         if (_bigBiteSweetSpotTimer > 0f) {
@@ -238,30 +276,29 @@ public class FishManager : MonoBehaviour {
     void PopulateAllCandidateFish(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList) {
         candidateList.Clear();
         for (int i = 0; i < maxCandidateFish; i++) {
-            GetCandidateFish(ref candidateList, environmentList, i);
+            var newFish = GetCandidateFish(candidateList, environmentList);
+            if (newFish) {
+                candidateList.Add(newFish);
+            }
         }
         candidateList.Shuffle();
     }
 
-    void GetCandidateFish(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList, int index) {
+    FishDataObject GetCandidateFish(List<FishDataObject> candidateList, List<FishDataObject> environmentList) {
         // try and get a fish from the environment list...
-        var newCandidate = GetCandidateFish(environmentList, candidateList);
+        var newCandidate = PickCandidateFish(environmentList, candidateList);
         
         // failing that, get a fish from the common list
         if (!newCandidate) {
-            newCandidate = GetCandidateFish(commonFishList.data, candidateList);
+            newCandidate = PickCandidateFish(commonFishList.data, candidateList);
         }
 
         // failing THAT, get a fish from the junk list (not yet implemented)...
-
-        if (newCandidate) {
-            candidateList.Add(newCandidate);
-        } else {
-            Debug.LogError("COULDN'T FIND A CANDIDATE FISH! THIS SHOULDN'T HAPPEN");
-        }
+        return newCandidate;
     }
 
-    FishDataObject GetCandidateFish(List<FishDataObject> candidateList, List<FishDataObject> omitList) {
+
+    FishDataObject PickCandidateFish(List<FishDataObject> candidateList, List<FishDataObject> omitList) {
         int hour = System.DateTime.Now.Hour;
         FishDataObject result;
         candidateList.Shuffle();
@@ -296,13 +333,12 @@ public class FishManager : MonoBehaviour {
         spawnRegion.DrawGizmos();
     }
 
-    private IEnumerator InitialSpawnRoutine() {
-        yield return new WaitForSeconds(initialSpawnDelay);
+    void SetupInitialSpawn() {
+        float t = initialSpawnDelay;
         for (int i = 0; i < initialFishCount; i++) {
-            activeFish.Add(SpawnFish());
-            yield return new WaitForSeconds(perFishDelay + Random.value * spawnDelayJitter);
+            _spawnQueue.Add(t);
+            t += perFishDelay + Random.value * spawnDelayJitter;
         }
-        yield return null;
     }
 
     Collider2D[] _overlapResults = new Collider2D[8];
@@ -397,12 +433,10 @@ public class FishManager : MonoBehaviour {
                 DespawnFish(ref fish, extraDelay: Random.Range(despawnJitterMin, despawnJitterMax));
             }
         }
-        
         if (TryGetFishByID(bitingFishID, out var index, out fish)) {
             DespawnFish(ref fish);
             activeFish.RemoveAt(index);
         }
-
         bitingFishID = -1;
         return false;
     }
@@ -429,19 +463,18 @@ public class FishManager : MonoBehaviour {
         fish.timer = Random.Range(biteIntervalMin, biteIntervalMax);
     }
 
-    public void EndBiteSequence(MashResult result) {
+    public void EndBiteSequence(CatchResult result) {
         float buttonDisableDelay = 0f;
         switch (result) {
         
-        case MashResult.Success:
-            CatchFish(GetRandomFish());
+        case CatchResult.Success:
+            CatchFish(GetRandomFishIndex());
         break;
 
-        case MashResult.Fail:
+        case CatchResult.Fail:
             buttonDisableDelay = failButtonDisableDelay;
-            MissFish(GetRandomFish());
+            MissFish(GetRandomFishIndex());
         break;
-        
         }
 
         if (buttonDisableDelay == 0f) {
@@ -576,21 +609,21 @@ public class FishManager : MonoBehaviour {
         return fishData;
     }
 
-
-
     [HideInInspector] public float _smallBiteSweetSpotTimer;
     [HideInInspector] public float _bigBiteSweetSpotTimer;
     public enum BiteResult {
         SmallBiteSuccess, BigBiteSuccess, BiteFail, Invalid
     }
-    public enum MashResult {
+    public enum CatchResult {
         Success, Fail
     }
     [HideInInspector] public int _successfulSmallBites;
     [HideInInspector] public int _failedBites = 0;
     public BiteResult TryGetBite() {
         BiteResult result;
-        if (bitingFishID < 0) { return BiteResult.Invalid; }
+        if (bitingFishID < 0) {
+            return BiteResult.Invalid;
+        }
         else if (_bigBiteSweetSpotTimer > 0f) {
             result = BiteResult.BigBiteSuccess;
             if (TryGetFishByID(bitingFishID, out var index, out var fish)) {
@@ -607,7 +640,7 @@ public class FishManager : MonoBehaviour {
             result = BiteResult.BiteFail;
             _failedBites++;
             if (_failedBites == 3) {
-                EndBiteSequence(result);
+                EndBiteSequence(CatchResult.Fail);
             }
         }
         return result;
@@ -632,7 +665,6 @@ public struct ActiveFishData {
     public float timer;
     public BobberBehaviour targetBobber;
 }
-
 
 public enum FishState {
     Moving, Idle, Biting, OnHook, Despawning

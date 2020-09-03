@@ -16,7 +16,13 @@ MonoBehaviour:
     name: Weeb
     profileSprite: {fileID: 21300000, guid: ed649560cd1a841e8aefef853121a288, type: 3}
     profileText: 
-    basePercentage: 0
+    basePercentage: 28.4
     timeRanges: []
-    favoriteBait: []
-    unlocked: 1
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
+      percentageBoost: 38
+    saveData:
+      unlocked: 1
+      numberCaught: 1
+      numberMissed: 0
+      timeFirstCaught: 17
