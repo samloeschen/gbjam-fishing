@@ -14,6 +14,7 @@ public class BobberAimBehaviour: MonoBehaviour {
 
     [Header("Mash Indicator")]
     public Animator buttonIndicatorAnimator;
+    public Transform buttonIndicatorTransform;
     public Vector2 mashIndicatorOffset;
 
 
@@ -25,7 +26,7 @@ public class BobberAimBehaviour: MonoBehaviour {
     public bool mashMode;
     float _currentMashValue;
     float _mashTimer;
-
+    public GameObject heartParticles;
     float _reelTimer;
 
     void OnEnable() {
@@ -86,6 +87,7 @@ public class BobberAimBehaviour: MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.X)) {
             if (mashMode) {
                 _currentMashValue += mashPressValue;
+                SpawnHeartParticles();
                 if (_currentMashValue > 1f) {
                     CompleteCatch();
                 }
@@ -104,6 +106,7 @@ public class BobberAimBehaviour: MonoBehaviour {
 
                     case BiteResult.SmallBiteSuccess:
                     buttonIndicatorAnimator.SetTrigger("GoodPress");
+                    SpawnHeartParticles();
                     rodBehaviour.HandleInput(RodAction.SmallBite);
                     break;
 
@@ -162,6 +165,10 @@ public class BobberAimBehaviour: MonoBehaviour {
         buttonIndicatorAnimator.SetTrigger("Reset");
         reticleMover.gameObject.SetActive(true);
         baitManager.enabled = true;
+    }
+
+    void SpawnHeartParticles() {
+        PoolManager.PoolInstantiate(heartParticles, buttonIndicatorTransform.position, Quaternion.identity);
     }
 
     void StartMashMode() {

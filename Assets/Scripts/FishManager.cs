@@ -72,7 +72,7 @@ public class FishManager : MonoBehaviour {
     public Transform buttonTransform;
     public Vector2 buttonBobberOffset;
     public SpriteRenderer buttonSpriteRenderer;
-    
+    public Animator buttonAnimator;
     public GameObject smallBiteAnimationPrefab;
     public GameObject bigBiteAnimationPrefab;
     
@@ -93,6 +93,7 @@ public class FishManager : MonoBehaviour {
     public float[] realProbabilities;
     public ProbabiilityFishPortrait[] fishPortraits;
     [System.NonSerialized] public EnvironmentData environmentData;
+    
 
     void Awake() {
 
@@ -156,12 +157,12 @@ public class FishManager : MonoBehaviour {
 
     public void CatchFish(FishDataObject fish) {
         if (!fish.data.saveData.unlocked) {
+            fish.data.saveData.unlocked = true;
+            fish.data.saveData.timeFirstCaught = System.DateTime.Now.Hour;
             // show phone and stuff
             phoneManager.UpdateProfileCell(fish);
             phoneManager.Show(delay: newFishShowPhoneDelay);
         }
-        fish.data.saveData.unlocked = true;
-        fish.data.saveData.timeFirstCaught = System.DateTime.Now.Hour;
         fish.data.saveData.numberCaught++;
     }
 
@@ -462,6 +463,7 @@ public class FishManager : MonoBehaviour {
             biteAnimationPrefab = smallBiteAnimationPrefab;
             fish.targetBobber.animator.SetTrigger("SmallBite");
         }
+        buttonAnimator.SetTrigger("Show");
         PoolManager.PoolInstantiate(biteAnimationPrefab, fish.position + biteNotificationOffset, Quaternion.identity);
         SetNextBiteInterval(ref fish);
     }
@@ -628,6 +630,7 @@ public class FishManager : MonoBehaviour {
     [HideInInspector] public int _failedBites = 0;
     public BiteResult TryGetBite() {
         BiteResult result;
+        
         if (bitingFishID < 0) {
             return BiteResult.Invalid;
         }
