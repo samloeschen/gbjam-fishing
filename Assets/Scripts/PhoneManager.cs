@@ -233,7 +233,7 @@ public class PhoneManager : MonoBehaviour {
 
     public void HandleInput() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            if (phoneEnabled) {
+            if (!phoneEnabled) {
                 ShowPhone(PhoneScreen.Matches);
                 _nextOpenScreen = PhoneScreen.Matches;
             } else {
