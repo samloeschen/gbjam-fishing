@@ -25,6 +25,13 @@ public class PhoneManager : MonoBehaviour {
     float _scrollStart;
     float _scrollTarget;
 
+    [Header("Screens")]
+    public GameObject matchesScreen;
+    public GameObject newMatchScreen;
+    public GameObject profileScreen;
+
+
+    [System.NonSerialized] public PhoneState phoneState;
     float _showTimer;
 
     public void Initialize(List<FishDataObject> fishList) {
@@ -103,12 +110,63 @@ public class PhoneManager : MonoBehaviour {
         aimBehaviour.enabled = false;
     }
 
+    public void ShowNewMatchScreen() {
+        matchesScreen.SetActive(false);
+        profileScreen.SetActive(false);
+        newMatchScreen.SetActive(true);
+    }
+
+    public void ShowProfileScreen() {
+        matchesScreen.SetActive(false);
+        newMatchScreen.SetActive(false);
+        profileScreen.SetActive(true);
+    }
+
+    public void ShowMatches() {
+        profileScreen.SetActive(false);
+        newMatchScreen.SetActive(false);
+        matchesScreen.SetActive(true);
+    }
+
     public void Hide() {
         phoneEnabled = false;
         phoneAnimator.SetTrigger("PhoneTransition");
         phoneAnimator.SetBool("PhoneEnabled", false);
         aimBehaviour.enabled = true;
     }
+
+
+    public void HandleInput(ButtonInput input) {
+        switch(phoneState) {
+            case PhoneState.Matches:
+            if (input == ButtonInput.A) {
+
+            }
+            else if (input == ButtonInput.B) {
+
+            }
+            break;
+
+            case PhoneState.NewMatch:
+            if (input == ButtonInput.A) {
+
+            }
+            else if (input == ButtonInput.B) {
+
+            }
+            break;
+
+            case PhoneState.Profile:
+            if (input == ButtonInput.B) {
+
+            }
+            break;
+        }
+    }
+}
+
+public enum PhoneState {
+    NewMatch, Matches, Profile
 }
 
 

@@ -19,3 +19,8 @@ MonoBehaviour:
     basePercentage: 0
     timeRanges: []
     favoriteBait: []
+    saveData:
+      unlocked: 0
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaught: 0
