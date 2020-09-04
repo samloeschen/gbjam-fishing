@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PhoneManager : MonoBehaviour {
     public Animator phoneAnimator;
@@ -13,6 +15,8 @@ public class PhoneManager : MonoBehaviour {
     public RectTransform contentTransform;
     public ScrollRect scrollRect;
     public RodBehaviour rodBehaviour;
+
+    public FishProfileCell selectedProfileCell;
 
     [System.NonSerialized]
     public bool phoneEnabled;
@@ -30,12 +34,55 @@ public class PhoneManager : MonoBehaviour {
     public GameObject newMatchScreen;
     public GameObject profileScreen;
 
+    [Header("New Match Screen")]
+    public Image newMatchScreenSprite;
 
-    [System.NonSerialized] public PhoneState phoneState;
+
+    [Header("Profile Screen")]
+    public Image profileScreenSprite;
+    public TextMeshProUGUI nameTMP;
+    public TextMeshProUGUI blurbTMP;
+    public TextMeshProUGUI caughtValueTMP;
+    public TextMeshProUGUI missedValueTMP;
+    public TextMeshProUGUI timeTMP;
+
+    CharArray _charArray;
+
+    [System.NonSerialized] public PhoneScreen phoneScreen;
     float _showTimer;
 
-    public void Initialize(List<FishDataObject> fishList) {
+    PhoneScreen _nextOpenScreen;
 
+    [System.NonSerialized] FishDataObject _targetProfile;
+
+    public event Action<PhoneAnimationEvent> onAnimationEvent;
+
+
+    void Awake( ){
+        _charArray = new CharArray(256);
+        onAnimationEvent += (PhoneAnimationEvent e) => {
+            switch (e) {
+                case PhoneAnimationEvent.PhoneOpenStart:
+                    switch (_nextOpenScreen) {
+                    case PhoneScreen.Matches:
+                        ShowMatches();
+                    break;
+
+                    case PhoneScreen.NewMatch:
+                        ShowNewMatchScreen(_targetProfile);
+                    break;
+
+                    case PhoneScreen.Profile:
+                        ShowProfileScreen(_targetProfile);
+                    
+                    break;
+                }
+                break;
+            }
+        };
+    }
+
+    public void Initialize(List<FishDataObject> fishList) {
         // set up scroll view items
         cellDict = new Dictionary<FishDataObject, FishProfileCell>(fishList.Count);
         cellList = new List<FishProfileCell>(fishList.Count);
@@ -52,6 +99,7 @@ public class PhoneManager : MonoBehaviour {
                 cellList.Add(cell);
             }
         }
+        ShowMatches();
     }
 
     public void ScrollToFishProfile(FishDataObject fish, bool animate = true) {
@@ -69,24 +117,50 @@ public class PhoneManager : MonoBehaviour {
         }
     }
 
+    public void SetTargetProfile(FishDataObject profile) {
+        _targetProfile = profile;
+    }
+
+    void LoadProfileData(FishDataObject fish) {
+        profileScreenSprite.sprite = fish.data.profileSprite;
+        nameTMP.text = fish.data.name;
+        blurbTMP.text = fish.data.profileText;
+
+        _charArray.Clear();
+        _charArray.Append((int)Mathf.Clamp(fish.data.saveData.numberCaught, 0, 999));
+        caughtValueTMP.SetCharArray(_charArray.GetArray(), 0, _charArray.count);
+
+        _charArray.Clear();
+        _charArray.Append((int)Mathf.Clamp(fish.data.saveData.numberMissed, 0, 999));
+        missedValueTMP.SetCharArray(_charArray.GetArray(), 0, _charArray.count);
+
+        _charArray.Clear();
+        _charArray.Append(fish.data.saveData.timeFirstCaughtHours);
+        _charArray.Append(':');
+        _charArray.Append(fish.data.saveData.timeFirstCaughtMinutes);
+        timeTMP.SetCharArray(_charArray.GetArray(), 0, _charArray.count);
+    }
+
     void OnEnable() {
         phoneEnabled = false;
     }
 
     public int testElementIndex;
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            if (!phoneEnabled) {
-                Show();
-            } else {
-                Hide();
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.Space)) {
+        //     if (!phoneEnabled) {
+        //         ShowPhone(PhoneScreen.Matches);
+        //     } else {
+        //         HidePhone();
+        //     }
+        // }
+
+        HandleInput();
 
         if (_showTimer >= 0f) {
             _showTimer -= Time.deltaTime;
             if (_showTimer >= 0f) {
-                Show();
+                ShowPhone(PhoneScreen.NewMatch);
             }
         }
 
@@ -99,77 +173,111 @@ public class PhoneManager : MonoBehaviour {
         }
     }
 
-    public void Show(float delay = 0f) {
+    public void PhoneAnimationEventHook(PhoneAnimationEvent e) {
+        if (onAnimationEvent != null) { onAnimationEvent(e); }
+    }
+
+    public void ShowPhone(PhoneScreen screen, float delay = 0f) {
         if (delay > 0f) {
             _showTimer = delay;
             return;
         }
+        _nextOpenScreen = screen;
         phoneEnabled = true;
         phoneAnimator.SetTrigger("PhoneTransition");
         phoneAnimator.SetBool("PhoneEnabled", true);
         aimBehaviour.enabled = false;
     }
 
-    public void ShowNewMatchScreen() {
+    public void ShowNewMatchScreen(FishDataObject fishProfile) {
+        phoneScreen = PhoneScreen.NewMatch;
+        newMatchScreenSprite.sprite = fishProfile.data.profileSprite;
         matchesScreen.SetActive(false);
         profileScreen.SetActive(false);
         newMatchScreen.SetActive(true);
     }
 
-    public void ShowProfileScreen() {
+    public void ShowProfileScreen(FishDataObject fishProfile) {
+        phoneScreen = PhoneScreen.Profile;
+        LoadProfileData(fishProfile);
         matchesScreen.SetActive(false);
         newMatchScreen.SetActive(false);
         profileScreen.SetActive(true);
     }
 
     public void ShowMatches() {
+        phoneScreen = PhoneScreen.Matches;
+        if (_targetProfile != null) {
+            SnapToCell(_targetProfile);
+        }
         profileScreen.SetActive(false);
         newMatchScreen.SetActive(false);
         matchesScreen.SetActive(true);
     }
 
-    public void Hide() {
+    public void ShowMatches(FishDataObject profile) {
+        _targetProfile = profile;
+        ShowMatches();
+    }
+
+    public void SnapToCell(FishDataObject targetProfile) {
+
+    }
+
+    public void HidePhone() {
         phoneEnabled = false;
         phoneAnimator.SetTrigger("PhoneTransition");
         phoneAnimator.SetBool("PhoneEnabled", false);
         aimBehaviour.enabled = true;
     }
 
-
-    public void HandleInput(ButtonInput input) {
-        switch(phoneState) {
-            case PhoneState.Matches:
-            if (input == ButtonInput.A) {
-
+    public void HandleInput() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            if (phoneEnabled) {
+                ShowPhone(PhoneScreen.Matches);
+                _nextOpenScreen = PhoneScreen.Matches;
+            } else {
+                HidePhone();
             }
-            else if (input == ButtonInput.B) {
+        }
 
-            }
+        if (phoneEnabled) {
+            switch(phoneScreen) {
+            case PhoneScreen.Matches:
+                if (Input.GetKeyDown(KeyCode.Z)) {
+                    ShowProfileScreen(selectedProfileCell.fishDataObject);
+                }
+                else if (Input.GetKeyDown(KeyCode.X)) {
+                    HidePhone();
+                }
             break;
 
-            case PhoneState.NewMatch:
-            if (input == ButtonInput.A) {
-
-            }
-            else if (input == ButtonInput.B) {
-
-            }
+            case PhoneScreen.NewMatch:
+                if (Input.GetKeyDown(KeyCode.Z)) {
+                    ShowProfileScreen(_targetProfile);
+                }
+                else if (Input.GetKeyDown(KeyCode.X)) {
+                    ShowMatches(_targetProfile);
+                }
             break;
 
-            case PhoneState.Profile:
-            if (input == ButtonInput.B) {
-
-            }
+            case PhoneScreen.Profile:
+                if (Input.GetKeyDown(KeyCode.X)) {
+                    ShowMatches();
+                }
             break;
+            }
         }
     }
 }
 
-public enum PhoneState {
+public enum PhoneScreen {
     NewMatch, Matches, Profile
 }
 
-
+public enum PhoneAnimationEvent {
+    PhoneOpenStart
+}
 
 public static class UIExtensions {
     

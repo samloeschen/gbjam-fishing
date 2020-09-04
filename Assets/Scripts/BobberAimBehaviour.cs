@@ -84,7 +84,7 @@ public class BobberAimBehaviour: MonoBehaviour {
         }
 
         // pick spot
-        if (Input.GetKeyDown(KeyCode.X)) {
+        if (Input.GetKeyDown(KeyCode.Z)) {
             if (mashMode) {
                 _currentMashValue += mashPressValue;
                 SpawnHeartParticles();
@@ -96,7 +96,7 @@ public class BobberAimBehaviour: MonoBehaviour {
                 rodBehaviour.HandleInput(RodAction.Cast);
                 reticleMover.gameObject.SetActive(false);
                 bobberBehaviour.targetPosition = reticleMover.position;
-                baitManager.enabled = false;
+                baitManager.Hide();
             }
             else if (rodBehaviour.currentState == RodState.WaitingForBite) {
                 var biteResult = fishManager.TryGetBite();
@@ -126,7 +126,7 @@ public class BobberAimBehaviour: MonoBehaviour {
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.C)) {
+        if (Input.GetKeyDown(KeyCode.X)) {
             buttonIndicatorAnimator.SetTrigger("Reset");
             if (rodBehaviour.currentState == RodState.WaitingForBite) {
                 DoReel();
@@ -164,7 +164,7 @@ public class BobberAimBehaviour: MonoBehaviour {
         }
         buttonIndicatorAnimator.SetTrigger("Reset");
         reticleMover.gameObject.SetActive(true);
-        baitManager.enabled = true;
+        baitManager.Show();
     }
 
     void SpawnHeartParticles() {

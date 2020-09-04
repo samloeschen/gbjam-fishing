@@ -75,6 +75,7 @@ public class FishManager : MonoBehaviour {
     public Animator buttonAnimator;
     public GameObject smallBiteAnimationPrefab;
     public GameObject bigBiteAnimationPrefab;
+    public YouGotAMatchScreen youGotAMatchScreen;
     
 
     [Header("Initial Spawn")]
@@ -156,19 +157,24 @@ public class FishManager : MonoBehaviour {
     }
 
     public void CatchFish(FishDataObject fish) {
+        fish.data.saveData.numberCaught++;
         if (!fish.data.saveData.unlocked) {
             fish.data.saveData.unlocked = true;
-            fish.data.saveData.timeFirstCaught = System.DateTime.Now.Hour;
+            fish.data.saveData.timeFirstCaughtHours = System.DateTime.Now.Hour;
+            fish.data.saveData.timeFirstCaughtMinutes = System.DateTime.Now.Minute;
             // show phone and stuff
             phoneManager.UpdateProfileCell(fish);
-            phoneManager.Show(delay: newFishShowPhoneDelay);
+            phoneManager.SetTargetProfile(fish);
+            youGotAMatchScreen.ShowSuccess(fish, goToPhone: true);
+        } else {
+            youGotAMatchScreen.ShowSuccess(fish);
         }
-        fish.data.saveData.numberCaught++;
     }
 
     public void MissFish(int fishIndex) {
         MissFish(currentFishList[fishIndex]);
         ChangeFish(fishIndex);
+        youGotAMatchScreen.ShowFail();
     }
     public void MissFish(FishDataObject fish) {
         fish.data.saveData.numberMissed++;

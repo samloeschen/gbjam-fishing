@@ -38,7 +38,8 @@ public struct SerializedFishData {
     public bool unlocked;
     public int numberCaught;
     public int numberMissed;
-    public int timeFirstCaught;
+    public int timeFirstCaughtHours;
+    public int timeFirstCaughtMinutes;
 }
 
 [System.Serializable]

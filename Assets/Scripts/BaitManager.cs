@@ -12,12 +12,14 @@ public class BaitManager : MonoBehaviour {
     public Animator rightArrowAnimator;
     public Animator baitSpriteAnimator;
 
-    void OnEnable() {
+    public void Show() {
+        this.enabled = true;
         baitParentAnimator.SetTrigger("Show");
     }
 
-    void OnDisable() {
+    public void Hide() {
         baitParentAnimator.SetTrigger("Hide");
+        this.enabled = false;
     }
 
     public void Initialize(GameState gameState) {

@@ -45,7 +45,7 @@ public class YouGotAMatchScreen : MonoBehaviour {
             switch(e) {
                 case CatchScreenAnimationEvent.CatchAnimationComplete:
                 if (_goToPhone) {
-                    phoneManager.Show();
+                    phoneManager.ShowPhone(PhoneScreen.NewMatch);
                 }
                 break;
             }
