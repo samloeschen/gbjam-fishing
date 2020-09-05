@@ -53,10 +53,13 @@ public class PhoneManager : MonoBehaviour {
 
     PhoneScreen _nextOpenScreen;
 
+    public float scrollDamping;
     [System.NonSerialized] FishDataObject _targetProfile;
 
     public event Action<PhoneAnimationEvent> onAnimationEvent;
 
+    [System.NonSerialized] int _selectedCellIndex;
+    public RectTransform selectedCellCursorTransform;
 
     void Awake( ){
         _charArray = new CharArray(256);
@@ -74,7 +77,6 @@ public class PhoneManager : MonoBehaviour {
 
                     case PhoneScreen.Profile:
                         ShowProfileScreen(_targetProfile);
-                    
                     break;
                 }
                 break;
@@ -147,16 +149,7 @@ public class PhoneManager : MonoBehaviour {
 
     public int testElementIndex;
     void Update() {
-        // if (Input.GetKeyDown(KeyCode.Space)) {
-        //     if (!phoneEnabled) {
-        //         ShowPhone(PhoneScreen.Matches);
-        //     } else {
-        //         HidePhone();
-        //     }
-        // }
-
         HandleInput();
-
         if (_showTimer >= 0f) {
             _showTimer -= Time.deltaTime;
             if (_showTimer >= 0f) {
@@ -171,6 +164,18 @@ public class PhoneManager : MonoBehaviour {
                 _animatingScroll = false;
             }
         }
+
+        // update selected cell stuff
+        selectedProfileCell = cellList[_selectedCellIndex];
+        Vector3 targetPos = selectedProfileCell.rectTransform.position;
+        selectedCellCursorTransform.position = targetPos;
+        float scroll = scrollRect.GetTargetScrollValue(selectedCellCursorTransform);
+        scrollRect.verticalNormalizedPosition = MathUtil.Damp(
+            scrollRect.verticalNormalizedPosition,
+            scroll,
+            scrollDamping,
+            Time.deltaTime
+        );
     }
 
     public void PhoneAnimationEventHook(PhoneAnimationEvent e) {
@@ -231,6 +236,18 @@ public class PhoneManager : MonoBehaviour {
         aimBehaviour.enabled = true;
     }
 
+    public void MutateSelectedCellIndex(int offset) {
+        int index = _selectedCellIndex + offset;
+        if (index < 0) {
+            index += cellList.Count;
+        }
+        if (index >= cellList.Count) {
+            index -= cellList.Count;
+        }
+        index = (int)Mathf.Clamp(index, 0, cellList.Count - 1);
+        _selectedCellIndex = index;
+    }
+
     public void HandleInput() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             if (!phoneEnabled) {
@@ -241,6 +258,7 @@ public class PhoneManager : MonoBehaviour {
             }
         }
 
+
         if (phoneEnabled) {
             switch(phoneScreen) {
             case PhoneScreen.Matches:
@@ -250,6 +268,24 @@ public class PhoneManager : MonoBehaviour {
                 else if (Input.GetKeyDown(KeyCode.X)) {
                     HidePhone();
                 }
+
+                const int columnWidth = 2;
+                if (Input.GetKeyDown(KeyCode.UpArrow)) {
+                    MutateSelectedCellIndex(-columnWidth);
+                }
+
+                if (Input.GetKeyDown(KeyCode.DownArrow)) {
+                    MutateSelectedCellIndex(columnWidth);
+                }
+
+                if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+                    MutateSelectedCellIndex(-1);
+                }
+
+                if (Input.GetKeyDown(KeyCode.RightArrow)) {
+                    MutateSelectedCellIndex(1);
+                }
+
             break;
 
             case PhoneScreen.NewMatch:
