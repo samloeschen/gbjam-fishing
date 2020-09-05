@@ -13,9 +13,21 @@ MonoBehaviour:
   m_Name: DJ
   m_EditorClassIdentifier: 
   data:
-    name: DJ
+    name: Bruce
     profileSprite: {fileID: 21300000, guid: d3cac4aa225f5465a8448976883aa81a, type: 3}
-    profileText: 
-    basePercentage: 0
-    timeRanges: []
-    favoriteBait: []
+    profileText: 'TURN DOWN FOR WHAT
+
+      mixcloud: X_DJBRUCE_X booking: bruce@djbruce.net'
+    basePercentage: 40
+    timeRanges:
+    - min: 20
+      max: 7
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
+      percentageBoost: 35
+    saveData:
+      unlocked: 0
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

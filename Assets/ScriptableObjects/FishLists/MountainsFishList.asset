@@ -12,4 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f942bd89441094f7c968c263dc4db091, type: 3}
   m_Name: MountainsFishList
   m_EditorClassIdentifier: 
-  reference: []
+  data:
+  - {fileID: 11400000, guid: 1ecfffd1c8cf0490f8d1d56784770ef7, type: 2}
+  - {fileID: 11400000, guid: 8af076dbea50048f28d5e2b5c8c9a466, type: 2}
+  - {fileID: 11400000, guid: f435ce10f2adb473d8231f484740ff33, type: 2}
+  - {fileID: 11400000, guid: 5b64baa95e3fd4314b0a4e76e933d846, type: 2}
+  - {fileID: 11400000, guid: 9e8d89ce4d4ce4092abcd33d94bf763d, type: 2}
+  - {fileID: 11400000, guid: b3c42c5a2402d4005a91f6b8b00e1383, type: 2}
+  - {fileID: 11400000, guid: e9e83c2b7fc1a4176a13e1d6e8d3f12a, type: 2}
+  - {fileID: 11400000, guid: 217e3cd8b5f2a48a485e23c9298b5574, type: 2}
+  - {fileID: 11400000, guid: 4d5c6a07b958e44e48b86d23b768d400, type: 2}

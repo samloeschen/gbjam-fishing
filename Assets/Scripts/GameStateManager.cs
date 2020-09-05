@@ -7,22 +7,12 @@ using FullSerializer;
 [CreateAssetMenu(fileName = "NewGameStateManager", menuName = "ScriptableObjects/GameStateManager")]
 public class GameStateManager: ScriptableObject {
     public GameState gameState;
-    public static string SaveDir;
-    public static string SavePath;
     public FishDataObjectList allFish;
 
-    void OnEnable() {
-        SaveDir = Application.persistentDataPath + "/SAVES";
-        SavePath = SaveDir + "/save.json";
-    }
     public bool LoadGame(out GameState gameSaveData) {
-
-        string SAVE_DIR = Application.persistentDataPath + "/SAVES";
-        string SAVE_PATH = SAVE_DIR + "/save.json";
-
         gameSaveData = default(GameState);
-        if (File.Exists(SAVE_PATH)) {
-            string json = File.ReadAllText(SAVE_PATH);
+        if (PlayerPrefs.HasKey(PLAYER_PREFS_KEY)) {
+            string json = PlayerPrefs.GetString(PLAYER_PREFS_KEY);
             gameSaveData = (GameState)StringSerializationAPI.Deserialize(typeof(GameState), json);
             if (gameSaveData.serializedFishDataDict == null) {
                 gameSaveData.serializedFishDataDict = new Dictionary<string, SerializedFishData>(allFish.data.Count);
@@ -59,11 +49,6 @@ public class GameStateManager: ScriptableObject {
     public bool LoadGame(out GameState gameState, GameState fallback) {
         gameState = default(GameState);
         if (LoadGame(out gameState)) {
-            string json = File.ReadAllText(SavePath);
-            gameState = (GameState)StringSerializationAPI.Deserialize(typeof(GameState), json);
-            if (gameState.serializedFishDataDict == null) {
-                gameState.serializedFishDataDict = new Dictionary<string, SerializedFishData>(32);
-            }
             return true;
         } else {
             gameState = new GameState();
@@ -75,15 +60,12 @@ public class GameStateManager: ScriptableObject {
     public bool LoadGame() {
         return LoadGame(out this.gameState, GameState.CreateDefault());
     }
-    
+    public const string PLAYER_PREFS_KEY = "GameSave";
     public void SaveGame() {
         string json = StringSerializationAPI.Serialize(typeof(GameState), gameState);
-        if (!Directory.Exists(SaveDir)) {
-            Directory.CreateDirectory(SaveDir);
-        }
-        File.WriteAllText(SavePath, json, System.Text.Encoding.UTF8);
+        PlayerPrefs.SetString(PLAYER_PREFS_KEY, json);
 #if UNITY_EDITOR
-        Debug.Log("Saved to " + SavePath);
+        Debug.Log("Saved game to PlayerPrefs");
 #endif
     }
 

@@ -13,9 +13,20 @@ MonoBehaviour:
   m_Name: NudePhotoGuy
   m_EditorClassIdentifier: 
   data:
-    name: Nude Photo Guy
+    name: '"Photographer"'
     profileSprite: {fileID: 21300000, guid: bd1c8272b7f8948a5923e2b37339719e, type: 3}
-    profileText: 
-    basePercentage: 0
-    timeRanges: []
-    favoriteBait: []
+    profileText: Looking for my muse. Needs to be comfortable in their own skin. You'll
+      be paid in plenty of exposure!
+    basePercentage: 35
+    timeRanges:
+    - min: 5
+      max: 17
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
+      percentageBoost: 35
+    saveData:
+      unlocked: 1
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

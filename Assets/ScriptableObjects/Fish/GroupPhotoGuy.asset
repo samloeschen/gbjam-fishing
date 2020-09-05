@@ -15,7 +15,18 @@ MonoBehaviour:
   data:
     name: Group Photo Guy
     profileSprite: {fileID: 21300000, guid: d4cb628c200534b2ebc6f71e58a9a33e, type: 3}
-    profileText: 
-    basePercentage: 0
-    timeRanges: []
-    favoriteBait: []
+    profileText: "Who did you match with? It\u2019s hard to tell. This fish is always
+      chilling with his bros, as shown in every. single. photo."
+    basePercentage: 60
+    timeRanges:
+    - min: 6
+      max: 19
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
+      percentageBoost: 35
+    saveData:
+      unlocked: 1
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee783ebdbc5f84b9ab1088a71c6a9538, type: 3}
-  m_Name: LinkedInGuy
+  m_Name: Director
   m_EditorClassIdentifier: 
   data:
-    name: LinkedIn Guy
-    profileSprite: {fileID: 21300000, guid: c03ffc6e9fc47487e9ba34033b771f84, type: 3}
-    profileText: "Wunderkind of crypto. INspriational, INfluencial, and on my 11th
-      INternship. I don't call my meetings 'meetings' \u2013 I call them 'doings'."
-    basePercentage: 15.4
+    name: Director
+    profileSprite: {fileID: 21300000, guid: 0e403586274a94ed58495118f74d1fb4, type: 3}
+    profileText: Talented filmmaker. Knows way more about Tarkovsky than you
+    basePercentage: 20
     timeRanges:
-    - min: 12
-      max: 19
+    - min: 4
+      max: 6
     favoriteBait:
-    - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
-      percentageBoost: 32.4
+    - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
+      percentageBoost: 35
     saveData:
       unlocked: 0
       numberCaught: 0

@@ -15,14 +15,17 @@ MonoBehaviour:
   data:
     name: Sup Guy
     profileSprite: {fileID: 21300000, guid: 7c26ac7bb5a864a26847206827504c48, type: 3}
-    profileText: 
-    basePercentage: 16.6
-    timeRanges: []
+    profileText: Sup
+    basePercentage: 47
+    timeRanges:
+    - min: 18
+      max: 2
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
-      percentageBoost: 22.2
+      percentageBoost: 35
     saveData:
       unlocked: 1
-      numberCaught: 1
+      numberCaught: 0
       numberMissed: 0
-      timeFirstCaught: 18
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

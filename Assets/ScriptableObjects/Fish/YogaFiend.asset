@@ -13,9 +13,21 @@ MonoBehaviour:
   m_Name: YogaFiend
   m_EditorClassIdentifier: 
   data:
-    name: Yoga Fiend
+    name: Yogi
     profileSprite: {fileID: 21300000, guid: 28346390370a341759cc6ae0b8c1300c, type: 3}
-    profileText: 
+    profileText: "Greetings!! I\u2019m a soul wanderer and Reiki master. Looking for
+      someone to practice my techniques on. Would love to help work out some of your
+      kinks."
     basePercentage: 0
-    timeRanges: []
-    favoriteBait: []
+    timeRanges:
+    - min: 4
+      max: 13
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
+      percentageBoost: 35
+    saveData:
+      unlocked: 0
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

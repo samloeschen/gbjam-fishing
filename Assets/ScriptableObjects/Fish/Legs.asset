@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee783ebdbc5f84b9ab1088a71c6a9538, type: 3}
-  m_Name: LinkedInGuy
+  m_Name: Legs
   m_EditorClassIdentifier: 
   data:
-    name: LinkedIn Guy
-    profileSprite: {fileID: 21300000, guid: c03ffc6e9fc47487e9ba34033b771f84, type: 3}
-    profileText: "Wunderkind of crypto. INspriational, INfluencial, and on my 11th
-      INternship. I don't call my meetings 'meetings' \u2013 I call them 'doings'."
-    basePercentage: 15.4
+    name: Leg Model
+    profileSprite: {fileID: 21300000, guid: a4b726d8e676d44adba5bbbc5ffd82f1, type: 3}
+    profileText: this inverse mermaid is totally out of your league
+    basePercentage: 10
     timeRanges:
-    - min: 12
-      max: 19
+    - min: 19
+      max: 22
     favoriteBait:
-    - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
-      percentageBoost: 32.4
+    - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
+      percentageBoost: 35
     saveData:
       unlocked: 0
       numberCaught: 0

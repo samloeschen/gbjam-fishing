@@ -117,6 +117,9 @@ public class FishManager : MonoBehaviour {
         currentFishList = new List<FishDataObject>(maxCandidateFish);
         PopulateAllCandidateFish(ref currentFishList, environmentData.fishSpawnList.data);
 
+        // always start with one common
+        currentFishList[Random.Range(0, currentFishList.Count)] = commonFishList.data.GetRandomWithSwapback();
+
         // spawn fish portraits
         Vector3 offset = Vector3.zero;
                 fishPortraits = new ProbabiilityFishPortrait[maxCandidateFish];
@@ -156,6 +159,11 @@ public class FishManager : MonoBehaviour {
     }
 
     public void CatchFish(FishDataObject fish) {
+        _recentlyCaughtFish.Add(fish);
+        if (_recentlyCaughtFish.Count > 2) {
+            _recentlyCaughtFish.RemoveAt(0);
+        }
+
         fish.data.saveData.numberCaught++;
         if (!fish.data.saveData.unlocked) {
             fish.data.saveData.unlocked = true;
@@ -238,6 +246,11 @@ public class FishManager : MonoBehaviour {
                 oldFish[i] = fish;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F)) {
+            CatchFish(1);
+        }
+
         // spawn new fish if needed
         if (activeFish.Count + _spawnQueue.Count < maxFishCount) {
             float shortInterval = Random.Range(shortSpawnIntervalMin, shortSpawnIntervalMax);
@@ -294,6 +307,7 @@ public class FishManager : MonoBehaviour {
         }
     }
 
+    List<FishDataObject> _recentlyCaughtFish = new List<FishDataObject>(4);
     void PopulateAllCandidateFish(ref List<FishDataObject> candidateList, List<FishDataObject> environmentList) {
         candidateList.Clear();
         for (int i = 0; i < maxCandidateFish; i++) {
@@ -327,12 +341,15 @@ public class FishManager : MonoBehaviour {
         for (int i = 0; i < candidateList.Count; i++) {
             var current = candidateList[i];
 
+            if (_recentlyCaughtFish.Contains(current)) { continue; }
+
             // reject any fish already present in the candidate list
             if (omitList.Contains(current)) { continue; }
 
             // iterate over current's time ranges, if one overlaps the current time
             // then this is a valid candidate and return
-            if (current.data.timeRanges.Count == 0) {
+            if ((current.data.timeRanges?.Count ?? 0) == 0) {
+                Debug.Log(current.data.name + " NO TIME RaNGE" );
                 return current;
             }
             for (int j = 0; j < current.data.timeRanges.Count; j++) {

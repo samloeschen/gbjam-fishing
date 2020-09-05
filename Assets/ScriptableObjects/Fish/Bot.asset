@@ -13,10 +13,15 @@ MonoBehaviour:
   m_Name: Bot
   m_EditorClassIdentifier: 
   data:
-    name: Mr. Bot
+    name: Mr. Fishy
     profileSprite: {fileID: 21300000, guid: 9851aafbb02654515a5da069fab16efd, type: 3}
-    profileText: 
-    basePercentage: 0
+    profileText: This is definitely not a real account!
+    basePercentage: 20
     timeRanges: []
     favoriteBait: []
-    unlocked: 0
+    saveData:
+      unlocked: 0
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

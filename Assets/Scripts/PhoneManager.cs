@@ -133,7 +133,7 @@ public class PhoneManager : MonoBehaviour {
         profileScreenSprite.sprite = fish.data.profileSprite;
         nameTMP.text = fish.data.name;
         profileBlurbScrollRect.verticalNormalizedPosition = 1;
-        // blurbTMP.text = fish.data.profileText;
+        blurbTMP.text = fish.data.profileText;
 
         _charArray.Clear();
         _charArray.Append((int)Mathf.Clamp(fish.data.saveData.numberCaught, 0, 999));
@@ -192,8 +192,6 @@ public class PhoneManager : MonoBehaviour {
 
         // update profile arrows
         if (phoneScreen == PhoneScreen.Profile) {
-
-            Debug.Log(profileBlurbScrollRect.verticalNormalizedPosition);
             if (profileBlurbScrollRect.verticalNormalizedPosition >= 1f - profileScrollDelta * 0.2) {
                 profileUpArrow.enabled = false;
             } else {

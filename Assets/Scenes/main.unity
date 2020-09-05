@@ -1295,7 +1295,7 @@ MonoBehaviour:
   useCustomEnvironment: 1
   baitManager: {fileID: 1116027569}
   fishManager: {fileID: 458765621}
-  customEnvironment: {fileID: 11400000, guid: 6e8472524a0254ad5912383c489bd095, type: 2}
+  customEnvironment: {fileID: 0}
   currentEnvironment: {fileID: 0}
   allFish: {fileID: 11400000, guid: 610f0b31aba604094a2ef774c837138c, type: 2}
 --- !u!4 &375570502
@@ -1326,7 +1326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameStateManager: {fileID: 11400000, guid: e22f5df38403944aa900a920a153b5c5, type: 2}
   allFish: {fileID: 11400000, guid: 610f0b31aba604094a2ef774c837138c, type: 2}
-  targetFish: {fileID: 11400000, guid: 396ad97ab1b5f4571a13c134bbf87201, type: 2}
+  targetFish: {fileID: 11400000, guid: 610f0b31aba604094a2ef774c837138c, type: 2}
 --- !u!1 &397766187
 GameObject:
   m_ObjectHideFlags: 0
@@ -1381,7 +1381,7 @@ MonoBehaviour:
     m_Left: 0
     m_Right: 0
     m_Top: 0
-    m_Bottom: -30
+    m_Bottom: -15
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 0

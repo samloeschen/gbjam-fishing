@@ -13,16 +13,19 @@ MonoBehaviour:
   m_Name: ThreesomeRight
   m_EditorClassIdentifier: 
   data:
-    name: Threesome Right
+    name: Threesome BF
     profileSprite: {fileID: 21300000, guid: 262b060a7968b4897881b71d5691115b, type: 3}
-    profileText: 
-    basePercentage: 36.6
-    timeRanges: []
+    profileText: uhhh this was my gfs idea
+    basePercentage: 25
+    timeRanges:
+    - min: 18
+      max: 5
     favoriteBait:
-    - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
-      percentageBoost: 23.3
+    - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
+      percentageBoost: 35
     saveData:
-      unlocked: 1
+      unlocked: 0
       numberCaught: 0
       numberMissed: 0
-      timeFirstCaught: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

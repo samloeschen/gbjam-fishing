@@ -15,8 +15,13 @@ MonoBehaviour:
   data:
     name: Tin Can
     profileSprite: {fileID: 21300000, guid: 9822f1836a2a64e6b88c4a40864651a0, type: 3}
-    profileText: 
-    basePercentage: 0
+    profileText: An old can. Thank you for helping clean up our waters!
+    basePercentage: 20
     timeRanges: []
     favoriteBait: []
-    unlocked: 0
+    saveData:
+      unlocked: 0
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

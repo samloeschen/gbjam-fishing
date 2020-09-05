@@ -15,14 +15,19 @@ MonoBehaviour:
   data:
     name: Weeb
     profileSprite: {fileID: 21300000, guid: ed649560cd1a841e8aefef853121a288, type: 3}
-    profileText: 
-    basePercentage: 28.4
-    timeRanges: []
+    profileText: 'omg I LOVE MY HERO ACADEMIA
+
+      UwU'
+    basePercentage: 40
+    timeRanges:
+    - min: 16
+      max: 24
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
-      percentageBoost: 38
+      percentageBoost: 35
     saveData:
-      unlocked: 1
-      numberCaught: 1
+      unlocked: 0
+      numberCaught: 0
       numberMissed: 0
-      timeFirstCaught: 17
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

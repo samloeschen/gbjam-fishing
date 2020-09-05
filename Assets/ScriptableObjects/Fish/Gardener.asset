@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee783ebdbc5f84b9ab1088a71c6a9538, type: 3}
-  m_Name: LinkedInGuy
+  m_Name: Gardener
   m_EditorClassIdentifier: 
   data:
-    name: LinkedIn Guy
-    profileSprite: {fileID: 21300000, guid: c03ffc6e9fc47487e9ba34033b771f84, type: 3}
-    profileText: "Wunderkind of crypto. INspriational, INfluencial, and on my 11th
-      INternship. I don't call my meetings 'meetings' \u2013 I call them 'doings'."
-    basePercentage: 15.4
+    name: Gardener
+    profileSprite: {fileID: 21300000, guid: 2df12b4d5f56c48dd855a59b42100303, type: 3}
+    profileText: "PLEASE let me know if you want cucumbers. They won\u2019t stop growing
+      and my neighbors won\u2019t take them anymore"
+    basePercentage: 10
     timeRanges:
-    - min: 12
-      max: 19
+    - min: 10
+      max: 16
     favoriteBait:
-    - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
-      percentageBoost: 32.4
+    - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
+      percentageBoost: 35
     saveData:
       unlocked: 0
       numberCaught: 0

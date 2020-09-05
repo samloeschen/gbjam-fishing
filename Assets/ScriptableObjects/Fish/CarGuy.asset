@@ -15,12 +15,18 @@ MonoBehaviour:
   data:
     name: Car Guy
     profileSprite: {fileID: 21300000, guid: 2ab75a34e57e94d7da88d0ffa4d9c660, type: 3}
-    profileText: 
-    basePercentage: 0
-    timeRanges: []
-    favoriteBait: []
+    profileText: you hope there is a cute guy buried somewhere beneath the flame shirt
+      and oakleys
+    basePercentage: 40
+    timeRanges:
+    - min: 7
+      max: 19
+    favoriteBait:
+    - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
+      percentageBoost: 35
     saveData:
       unlocked: 0
       numberCaught: 0
       numberMissed: 0
-      timeFirstCaught: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

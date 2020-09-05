@@ -15,14 +15,17 @@ MonoBehaviour:
   data:
     name: Sauve Guy
     profileSprite: {fileID: 21300000, guid: 72d1275b8d19a4729919422e8cffbc60, type: 3}
-    profileText: 
-    basePercentage: 20.5
-    timeRanges: []
+    profileText: Girl if you were a Transformer your name would be Optimus Fine
+    basePercentage: 42
+    timeRanges:
+    - min: 11
+      max: 18
     favoriteBait:
-    - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
-      percentageBoost: 29
+    - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
+      percentageBoost: 35
     saveData:
       unlocked: 1
-      numberCaught: 1
+      numberCaught: 0
       numberMissed: 0
-      timeFirstCaught: 18
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

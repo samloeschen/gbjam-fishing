@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f942bd89441094f7c968c263dc4db091, type: 3}
   m_Name: JunkyardFishList
   m_EditorClassIdentifier: 
-  reference: []
+  data:
+  - {fileID: 11400000, guid: 4d15d0828867c4d5780dd39ba22ba00b, type: 2}
+  - {fileID: 11400000, guid: 500a259f4ebde4571ad3e11950bf684a, type: 2}
+  - {fileID: 11400000, guid: 94baea7310f7c4bb7a8fd8e2ed51745d, type: 2}
+  - {fileID: 11400000, guid: b53f4144b2e494442b131297baafb8e7, type: 2}
+  - {fileID: 11400000, guid: d2c3a235ac2904851afeda565ab3c0dc, type: 2}
+  - {fileID: 11400000, guid: e09c246a27c5d4e69b10ddfe7a59b542, type: 2}
+  - {fileID: 11400000, guid: e45ebd732947745699d43b4a4dfefce2, type: 2}
+  - {fileID: 11400000, guid: 4cbe6d730019a4d9b91d2f19aaa617ca, type: 2}

@@ -13,16 +13,20 @@ MonoBehaviour:
   m_Name: ThreesomeLeft
   m_EditorClassIdentifier: 
   data:
-    name: Threesome Left
+    name: Threesome GF
     profileSprite: {fileID: 21300000, guid: 3faeac63ec97f4bba9acea8465220dee, type: 3}
-    profileText: 
-    basePercentage: 20.5
-    timeRanges: []
+    profileText: On the lookout for a lucky third to join us for a menage a trois
+      ;)
+    basePercentage: 40
+    timeRanges:
+    - min: 5
+      max: 14
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
       percentageBoost: 25
     saveData:
-      unlocked: 1
+      unlocked: 0
       numberCaught: 0
       numberMissed: 0
-      timeFirstCaught: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

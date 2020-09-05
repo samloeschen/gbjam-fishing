@@ -15,8 +15,13 @@ MonoBehaviour:
   data:
     name: Norman
     profileSprite: {fileID: 21300000, guid: ac97294b8a66c4960b9d08525bf7af3e, type: 3}
-    profileText: 
-    basePercentage: 0
+    profileText: Hi there I'm just here to meet people haha
+    basePercentage: 30
     timeRanges: []
     favoriteBait: []
-    unlocked: 0
+    saveData:
+      unlocked: 0
+      numberCaught: 0
+      numberMissed: 0
+      timeFirstCaughtHours: 0
+      timeFirstCaughtMinutes: 0

@@ -12,4 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f942bd89441094f7c968c263dc4db091, type: 3}
   m_Name: BeachFishList
   m_EditorClassIdentifier: 
-  reference: []
+  data:
+  - {fileID: 11400000, guid: aed29105983a3434ab7e3b5045f67671, type: 2}
+  - {fileID: 11400000, guid: 0930c5b4af6124d7bada4a769f98150f, type: 2}
+  - {fileID: 11400000, guid: e3ee58040774f4dbb893b2311c352d8f, type: 2}
+  - {fileID: 11400000, guid: 7ed2be90bda1c4797b9118befb882b67, type: 2}
+  - {fileID: 11400000, guid: 2ad0ebf98ea3c461f9c091b70bda2e53, type: 2}
+  - {fileID: 11400000, guid: 0753d367b35044da6895dd74ae0b349e, type: 2}
+  - {fileID: 11400000, guid: c91705c21f53341beb8077172a7fa5eb, type: 2}
+  - {fileID: 11400000, guid: e372e6082b183403d934ad9efa5150d3, type: 2}
+  - {fileID: 11400000, guid: 52dea0648ff454e849afd0ba999c67b7, type: 2}
