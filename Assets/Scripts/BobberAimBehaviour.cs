@@ -33,6 +33,7 @@ public class BobberAimBehaviour: MonoBehaviour {
         if (rodBehaviour.currentState == RodState.Idle) {
             reticleMover.gameObject.SetActive(true);
         }
+        fishManager.ChangeFishDeferred();
     }
 
     bool _isQuitting = false;
@@ -137,7 +138,6 @@ public class BobberAimBehaviour: MonoBehaviour {
     }
 
     void FailCatch() {
-        Debug.Log("Fail :(");
         bobberBehaviour.isInWater = false;
         mashMode = false;
         buttonIndicatorAnimator.SetTrigger("BadPress");
@@ -146,7 +146,6 @@ public class BobberAimBehaviour: MonoBehaviour {
     }
 
     void CompleteCatch() {
-        Debug.Log("Success!!!!");
         bobberBehaviour.isInWater = false;
         mashMode = false;
         DoReel();

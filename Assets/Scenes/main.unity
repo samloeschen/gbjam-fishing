@@ -6232,6 +6232,7 @@ MonoBehaviour:
     count: 0
   phoneManager: {fileID: 1894989730}
   successParticles: {fileID: 3632567503257927671}
+  bobberAimBehaviour: {fileID: 1900598217}
   testFishObject: {fileID: 11400000, guid: e45ebd732947745699d43b4a4dfefce2, type: 2}
 --- !u!95 &1828743110
 Animator:

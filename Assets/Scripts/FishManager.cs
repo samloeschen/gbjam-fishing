@@ -95,7 +95,6 @@ public class FishManager : MonoBehaviour {
     public ProbabiilityFishPortrait[] fishPortraits;
     [System.NonSerialized] public EnvironmentData environmentData;
     
-
     void Awake() {
 
     }
@@ -151,9 +150,9 @@ public class FishManager : MonoBehaviour {
     }
 
     public void CatchFish(int fishIndex) {
-        Debug.Log(fishIndex);
         CatchFish(currentFishList[fishIndex]);
-        ChangeFish(fishIndex);
+        _deferredChangeFishIndex = fishIndex;
+        fishPortraits[fishIndex].SetFishDataObject(currentFishList[fishIndex]);
     }
 
     public void CatchFish(FishDataObject fish) {
@@ -187,6 +186,14 @@ public class FishManager : MonoBehaviour {
         currentFishList.Insert(fishIndex, newFish);
         var portrait = fishPortraits[fishIndex];
         portrait.SetFishDataObject(newFish, animate: true);
+    }
+
+    [System.NonSerialized] int _deferredChangeFishIndex = -1;
+    public void ChangeFishDeferred() {
+        if (_deferredChangeFishIndex >= 0) {
+            ChangeFish(_deferredChangeFishIndex);
+        }
+        _deferredChangeFishIndex = -1;
     }
 
     void OnEnable() {
