@@ -137,8 +137,14 @@ public class PhoneManager : MonoBehaviour {
         missedValueTMP.SetCharArray(_charArray.GetArray(), 0, _charArray.count);
 
         _charArray.Clear();
+        if (fish.data.saveData.timeFirstCaughtHours < 10) {
+            _charArray.Append(0);
+        }
         _charArray.Append(fish.data.saveData.timeFirstCaughtHours);
         _charArray.Append(':');
+        if (fish.data.saveData.timeFirstCaughtMinutes < 10) {
+            _charArray.Append(0);
+        }
         _charArray.Append(fish.data.saveData.timeFirstCaughtMinutes);
         timeTMP.SetCharArray(_charArray.GetArray(), 0, _charArray.count);
     }
@@ -263,7 +269,9 @@ public class PhoneManager : MonoBehaviour {
             switch(phoneScreen) {
             case PhoneScreen.Matches:
                 if (Input.GetKeyDown(KeyCode.Z)) {
-                    ShowProfileScreen(selectedProfileCell.fishDataObject);
+                    if (selectedProfileCell.fishDataObject.data.saveData.unlocked) {
+                        ShowProfileScreen(selectedProfileCell.fishDataObject);
+                    }
                 }
                 else if (Input.GetKeyDown(KeyCode.X)) {
                     HidePhone();
