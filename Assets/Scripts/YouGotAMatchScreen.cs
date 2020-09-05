@@ -15,6 +15,7 @@ public class YouGotAMatchScreen : MonoBehaviour {
     public PhoneManager phoneManager;
 
     public ParticleSystem successParticles;
+    public BobberAimBehaviour bobberAimBehaviour;
 
     public event Action<CatchScreenAnimationEvent> onAnimationEvent;
 
@@ -46,6 +47,8 @@ public class YouGotAMatchScreen : MonoBehaviour {
                 case CatchScreenAnimationEvent.CatchAnimationComplete:
                 if (_goToPhone) {
                     phoneManager.ShowPhone(PhoneScreen.NewMatch);
+                } else {
+                    bobberAimBehaviour.enabled = true;
                 }
                 break;
             }
@@ -53,6 +56,7 @@ public class YouGotAMatchScreen : MonoBehaviour {
     }
 
     public void ShowSuccess(FishDataObject fish, bool goToPhone = false) {
+        bobberAimBehaviour.enabled = false;
         animator.SetTrigger("ShowSuccess");
         profileSpriteRenderer.sprite = fish.data.profileSprite;
         messageCharArray.Clear();
@@ -67,6 +71,7 @@ public class YouGotAMatchScreen : MonoBehaviour {
     }
 
     public void ShowFail() {
+        bobberAimBehaviour.enabled = false;
         animator.SetTrigger("ShowFail");
     }
 

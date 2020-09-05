@@ -141,16 +141,16 @@ public class BobberAimBehaviour: MonoBehaviour {
         bobberBehaviour.isInWater = false;
         mashMode = false;
         buttonIndicatorAnimator.SetTrigger("BadPress");
-        fishManager.EndBiteSequence(CatchResult.Fail);
         DoReel(delay: 0.35f);
+        fishManager.EndBiteSequence(CatchResult.Fail);
     }
 
     void CompleteCatch() {
         Debug.Log("Success!!!!");
         bobberBehaviour.isInWater = false;
         mashMode = false;
-        fishManager.EndBiteSequence(CatchResult.Success);
         DoReel();
+        fishManager.EndBiteSequence(CatchResult.Success);
     }
 
     void DoReel(float delay = 0f) {
