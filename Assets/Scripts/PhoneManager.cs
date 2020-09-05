@@ -45,6 +45,11 @@ public class PhoneManager : MonoBehaviour {
     public TextMeshProUGUI caughtValueTMP;
     public TextMeshProUGUI missedValueTMP;
     public TextMeshProUGUI timeTMP;
+    public ScrollRect profileBlurbScrollRect;
+    public ProfileScrollArrow profileUpArrow;
+    public ProfileScrollArrow profileDownArrow;
+
+    public float profileScrollDelta;
 
     CharArray _charArray;
 
@@ -60,6 +65,7 @@ public class PhoneManager : MonoBehaviour {
 
     [System.NonSerialized] int _selectedCellIndex;
     public RectTransform selectedCellCursorTransform;
+
 
     void Awake( ){
         _charArray = new CharArray(256);
@@ -126,7 +132,8 @@ public class PhoneManager : MonoBehaviour {
     void LoadProfileData(FishDataObject fish) {
         profileScreenSprite.sprite = fish.data.profileSprite;
         nameTMP.text = fish.data.name;
-        blurbTMP.text = fish.data.profileText;
+        profileBlurbScrollRect.verticalNormalizedPosition = 1;
+        // blurbTMP.text = fish.data.profileText;
 
         _charArray.Clear();
         _charArray.Append((int)Mathf.Clamp(fish.data.saveData.numberCaught, 0, 999));
@@ -182,6 +189,22 @@ public class PhoneManager : MonoBehaviour {
             scrollDamping,
             Time.deltaTime
         );
+
+        // update profile arrows
+        if (phoneScreen == PhoneScreen.Profile) {
+
+            Debug.Log(profileBlurbScrollRect.verticalNormalizedPosition);
+            if (profileBlurbScrollRect.verticalNormalizedPosition >= 1f - profileScrollDelta * 0.2) {
+                profileUpArrow.enabled = false;
+            } else {
+                profileUpArrow.enabled = true;
+            }
+            if (profileBlurbScrollRect.verticalNormalizedPosition <= 0f + profileScrollDelta * 0.2) {
+                profileDownArrow.enabled = false;
+            } else {
+                profileDownArrow.enabled = true;
+            }
+        }
     }
 
     public void PhoneAnimationEventHook(PhoneAnimationEvent e) {
@@ -308,6 +331,15 @@ public class PhoneManager : MonoBehaviour {
             case PhoneScreen.Profile:
                 if (Input.GetKeyDown(KeyCode.X)) {
                     ShowMatches();
+                }
+                if (Input.GetKeyDown(KeyCode.UpArrow)) {
+                    profileBlurbScrollRect.verticalNormalizedPosition += profileScrollDelta;
+                    profileUpArrow.Press();
+                }
+                if (Input.GetKeyDown(KeyCode.DownArrow)) {
+                    profileBlurbScrollRect.verticalNormalizedPosition -= profileScrollDelta;
+                    profileDownArrow.Press();
+
                 }
             break;
             }
