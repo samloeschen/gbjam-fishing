@@ -541,7 +541,7 @@ public class FishManager : MonoBehaviour {
     public bool TryGetFishByID(int id, out int index, out ActiveFishData fish) {
         index = -1;
         if (id < 0) { 
-            fish = default(ActiveFishData);s
+            fish = default(ActiveFishData);
             return false;
         }
         for (int i = 0; i < activeFish.Count; i++) {
@@ -553,6 +553,7 @@ public class FishManager : MonoBehaviour {
         }
         fish = default(ActiveFishData);
         return false;
+
     }
 
     const int newPositionCandidateCount = 20;
@@ -569,6 +570,7 @@ public class FishManager : MonoBehaviour {
                 x = Mathf.Cos(angle) * radius,
                 y = Mathf.Sin(angle) * radiusHeightFactor
             };
+            
 
             // reject any positions outside of the safe area
             if (!moveRegion.Contains(candidatePos)) { continue; }
