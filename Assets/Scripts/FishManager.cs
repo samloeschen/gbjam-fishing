@@ -93,6 +93,13 @@ public class FishManager : MonoBehaviour {
     public float[] baseProbabilities;
     public float[] realProbabilities;
     public ProbabiilityFishPortrait[] fishPortraits;
+
+    [Header("SFX")]
+    public AudioClip catchUnlockOneShot;
+    public AudioClip catchSuccessOneShot;
+    public AudioClip catchFailOneShot;
+    public AudioClip biteOneShot;
+
     [System.NonSerialized] public EnvironmentData environmentData;
     
     void Awake() {
@@ -173,8 +180,10 @@ public class FishManager : MonoBehaviour {
             phoneManager.UpdateProfileCell(fish);
             phoneManager.SetTargetProfile(fish);
             youGotAMatchScreen.ShowSuccess(fish, goToPhone: true);
+            OneShotManager.PlayOneShot(catchUnlockOneShot);
         } else {
             youGotAMatchScreen.ShowSuccess(fish);
+            OneShotManager.PlayOneShot(catchSuccessOneShot);
         }
     }
 
@@ -182,6 +191,7 @@ public class FishManager : MonoBehaviour {
         MissFish(currentFishList[fishIndex]);
         ChangeFish(fishIndex);
         youGotAMatchScreen.ShowFail();
+        OneShotManager.PlayOneShot(catchFailOneShot);
     }
     public void MissFish(FishDataObject fish) {
         fish.data.saveData.numberMissed++;
@@ -496,6 +506,7 @@ public class FishManager : MonoBehaviour {
         buttonAnimator.SetTrigger("Show");
         PoolManager.PoolInstantiate(biteAnimationPrefab, fish.position + biteNotificationOffset, Quaternion.identity);
         SetNextBiteInterval(ref fish);
+        OneShotManager.PlayOneShot(biteOneShot);
     }
 
     void SetNextBiteInterval(ref ActiveFishData fish) {

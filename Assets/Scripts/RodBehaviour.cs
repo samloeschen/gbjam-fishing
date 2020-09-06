@@ -18,6 +18,13 @@ public class RodBehaviour : MonoBehaviour {
     [HideInInspector]
     public float bobberScaleAnim = 1f;
 
+    [Header("SFX")]
+    public AudioClip castOneShot;
+    public AudioClip reelOneShot;
+    public AudioClip tugOneShot;
+
+    public AudioSource bigBiteLoopSource;
+
     void OnEnable() {
         currentState = RodState.Idle;
         HandleInput(RodAction.Idle);
@@ -26,18 +33,23 @@ public class RodBehaviour : MonoBehaviour {
     public void HandleInput(RodAction action) {
         switch (action) {
             case RodAction.Cast:
+            OneShotManager.PlayOneShot(castOneShot);
             animator.SetTrigger("CastStart");
             break;
 
             case RodAction.SmallBite:
+            OneShotManager.PlayOneShot(tugOneShot);
             animator.SetTrigger("SmallBite");
             break;
 
             case RodAction.BigBite:
+            bigBiteLoopSource.Play();
             animator.SetTrigger("BigBite");
             break;
 
             case RodAction.Reel:
+            bigBiteLoopSource.Stop();
+            OneShotManager.PlayOneShot(reelOneShot);
             animator.SetTrigger("ReelStart");
             break;
 

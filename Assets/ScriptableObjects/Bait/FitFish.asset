@@ -15,3 +15,4 @@ MonoBehaviour:
   data:
     name: Fit FIsh
     uiSprite: {fileID: 21300000, guid: 28452236959274d02b67074e263657f3, type: 3}
+    oneShot: {fileID: 8300000, guid: db42bb79fa1a9f54cbdccac287132622, type: 3}

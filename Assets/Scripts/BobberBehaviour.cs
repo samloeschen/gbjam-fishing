@@ -17,11 +17,18 @@ public class BobberBehaviour : MonoBehaviour {
     public Vector2 position => rigidbody2D.position;
     public event Action<BobberAnimationEvent> animationEventCallback;
 
+    [Header("SFX")]
+    public AudioClip landInWaterOneShot;
+
     void Start() {
         animationEventCallback += (BobberAnimationEvent e) => {
             switch (e) {
             case BobberAnimationEvent.SplashComplete:
                 this.isInWater = true;
+            break;
+
+            case BobberAnimationEvent.LandInWaterOneShot:
+                OneShotManager.PlayOneShot(landInWaterOneShot);
             break;
 
             case BobberAnimationEvent.ReelStart:
@@ -51,6 +58,6 @@ public class BobberBehaviour : MonoBehaviour {
     }
 
     public enum BobberAnimationEvent {
-        SplashComplete, ReelStart
+        SplashComplete, ReelStart, LandInWaterOneShot
     }
 }

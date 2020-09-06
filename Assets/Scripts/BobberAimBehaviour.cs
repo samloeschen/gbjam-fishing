@@ -29,6 +29,9 @@ public class BobberAimBehaviour: MonoBehaviour {
     public GameObject heartParticles;
     float _reelTimer;
 
+    [Header("SFX")]
+    public AudioClip buttonPressClip;
+
     void OnEnable() {
         if (rodBehaviour.currentState == RodState.Idle) {
             reticleMover.gameObject.SetActive(true);
@@ -100,6 +103,7 @@ public class BobberAimBehaviour: MonoBehaviour {
                 baitManager.Hide();
             }
             else if (rodBehaviour.currentState == RodState.WaitingForBite) {
+                // OneShotManager.PlayOneShot(buttonPressClip);
                 var biteResult = fishManager.TryGetBite();
                 switch (biteResult) {
                     case BiteResult.Invalid:

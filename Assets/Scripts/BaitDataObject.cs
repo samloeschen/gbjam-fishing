@@ -9,5 +9,6 @@ public class BaitDataObject : RefObject<BaitData> { }
 public struct BaitData {
     public string name;
     public Sprite uiSprite;
+    public AudioClip oneShot;
 }
 

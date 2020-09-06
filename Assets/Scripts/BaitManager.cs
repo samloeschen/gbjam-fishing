@@ -11,6 +11,7 @@ public class BaitManager : MonoBehaviour {
     public Animator leftArrowAnimator;
     public Animator rightArrowAnimator;
     public Animator baitSpriteAnimator;
+    public AudioSource baitAudioSource;
 
     public void Show() {
         this.enabled = true;
@@ -43,11 +44,15 @@ public class BaitManager : MonoBehaviour {
             SelectBait(selectedBaitIndex - 1);
             leftArrowAnimator.SetTrigger("Press");
             baitSpriteAnimator.SetTrigger("Press");
+            baitAudioSource.clip = selectedBait.data.oneShot;
+            baitAudioSource.Play();
         }
         if (Input.GetKeyDown(KeyCode.S)) {
             SelectBait(selectedBaitIndex + 1);
             rightArrowAnimator.SetTrigger("Press");
             baitSpriteAnimator.SetTrigger("Press");
+            baitAudioSource.clip = selectedBait.data.oneShot;
+            baitAudioSource.Play();
         }
     }
 }

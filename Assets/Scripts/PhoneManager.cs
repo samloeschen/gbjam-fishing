@@ -72,6 +72,12 @@ public class PhoneManager : MonoBehaviour {
     
     public PixelPerfectCamera pixelPerfectCamera;
 
+    [Header("SFX")]
+    public AudioClip showOneShot;
+    public AudioClip cursorOneShot;
+    public AudioClip selectOneShot;
+    public AudioClip backOneShot;
+
     void Awake( ){
         _charArray = new CharArray(256);
         onAnimationEvent += (PhoneAnimationEvent e) => {
@@ -226,6 +232,7 @@ public class PhoneManager : MonoBehaviour {
         phoneAnimator.SetTrigger("PhoneTransition");
         phoneAnimator.SetBool("PhoneEnabled", true);
         aimBehaviour.enabled = false;
+        OneShotManager.PlayOneShot(showOneShot);
     }
 
     public void ShowNewMatchScreen(FishDataObject fishProfile) {
@@ -242,6 +249,7 @@ public class PhoneManager : MonoBehaviour {
         matchesScreen.SetActive(false);
         newMatchScreen.SetActive(false);
         profileScreen.SetActive(true);
+        OneShotManager.PlayOneShot(selectOneShot, 1f);
     }
 
     public void ShowMatches() {
@@ -268,6 +276,7 @@ public class PhoneManager : MonoBehaviour {
         phoneAnimator.SetTrigger("PhoneTransition");
         phoneAnimator.SetBool("PhoneEnabled", false);
         aimBehaviour.enabled = true;
+        OneShotManager.PlayOneShot(backOneShot, 1f);
     }
 
     public void MutateSelectedCellIndex(int offset) {
@@ -280,6 +289,7 @@ public class PhoneManager : MonoBehaviour {
         }
         index = (int)Mathf.Clamp(index, 0, cellList.Count - 1);
         _selectedCellIndex = index;
+        OneShotManager.PlayOneShot(cursorOneShot, 1f);
     }
 
     public void HandleInput() {
@@ -327,15 +337,18 @@ public class PhoneManager : MonoBehaviour {
             case PhoneScreen.NewMatch:
                 if (Input.GetKeyDown(KeyCode.Z)) {
                     ShowProfileScreen(_targetProfile);
+            
                 }
                 else if (Input.GetKeyDown(KeyCode.X)) {
                     ShowMatches(_targetProfile);
+                    OneShotManager.PlayOneShot(backOneShot, 1f);
                 }
             break;
 
             case PhoneScreen.Profile:
                 if (Input.GetKeyDown(KeyCode.X)) {
                     ShowMatches();
+                    OneShotManager.PlayOneShot(backOneShot, 1f);
                 }
                 if (Input.GetKeyDown(KeyCode.UpArrow)) {
                     profileBlurbScrollRect.verticalNormalizedPosition += profileScrollDelta;
@@ -401,15 +414,12 @@ public static class UIExtensions {
     }
 
     public static float GetTargetScrollValue(this ScrollRect scrollRect, RectTransform target) {
-        // The scroll rect's view's space is used to calculate scroll position
         var view = scrollRect.viewport != null ? scrollRect.viewport : scrollRect.GetComponent<RectTransform>();
 
-        // Calcualte the scroll offset in the view's space
         var viewRect = view.rect;
         var elementBounds = target.TransformBoundsTo(view);
         var offset = viewRect.center.y - elementBounds.center.y;
 
-        // Normalize and apply the calculated offset
         var scrollPos = scrollRect.verticalNormalizedPosition - scrollRect.NormalizeScrollDistance(1, offset);
         return Mathf.Clamp(scrollPos, 0f, 1f);
     }

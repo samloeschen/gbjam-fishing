@@ -15,3 +15,4 @@ MonoBehaviour:
   data:
     name: E-GIrl
     uiSprite: {fileID: 21300000, guid: 081decc65638f438e9dafbafb997d33d, type: 3}
+    oneShot: {fileID: 8300000, guid: 5a92220f2412a3043ac46a4c64667568, type: 3}
