@@ -221,7 +221,7 @@ public class PhoneManager : MonoBehaviour {
     public void PhoneAnimationEventHook(PhoneAnimationEvent e) {
         if (onAnimationEvent != null) { onAnimationEvent(e); }
     }
-
+    public GameStateManager gameStateManager;
     public void ShowPhone(PhoneScreen screen, float delay = 0f) {
         if (delay > 0f) {
             _showTimer = delay;
@@ -233,6 +233,7 @@ public class PhoneManager : MonoBehaviour {
         phoneAnimator.SetBool("PhoneEnabled", true);
         aimBehaviour.enabled = false;
         OneShotManager.PlayOneShot(showOneShot);
+        gameStateManager.SaveGame();
     }
 
     public void ShowNewMatchScreen(FishDataObject fishProfile) {

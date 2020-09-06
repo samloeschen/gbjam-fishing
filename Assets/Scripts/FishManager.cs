@@ -513,6 +513,7 @@ public class FishManager : MonoBehaviour {
         fish.timer = Random.Range(biteIntervalMin, biteIntervalMax);
     }
 
+    public GameStateManager gameStateManager;
     public void EndBiteSequence(CatchResult result) {
         float buttonDisableDelay = 0f;
         switch (result) {
@@ -534,12 +535,13 @@ public class FishManager : MonoBehaviour {
         }
         DespawnFish(bitingFishID);
         bitingFishID = -1;
+        gameStateManager.SaveGame();
     }
 
     public bool TryGetFishByID(int id, out int index, out ActiveFishData fish) {
         index = -1;
         if (id < 0) { 
-            fish = default(ActiveFishData);
+            fish = default(ActiveFishData);s
             return false;
         }
         for (int i = 0; i < activeFish.Count; i++) {
@@ -633,7 +635,6 @@ public class FishManager : MonoBehaviour {
                 fish.startPosition = candidatePos;
                 fish.position = candidatePos;
                 fish.targetPosition = candidatePos;
-
             }
             tries++;
         }

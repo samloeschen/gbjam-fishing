@@ -1530,6 +1530,7 @@ MonoBehaviour:
   catchSuccessOneShot: {fileID: 8300000, guid: 7b83b61338d12db43affb289fd0f7f1e, type: 3}
   catchFailOneShot: {fileID: 8300000, guid: 679154698bac3ed43806dd3194091ce2, type: 3}
   biteOneShot: {fileID: 8300000, guid: 1e192c3220299f34e9c50ef30eb75f99, type: 3}
+  gameStateManager: {fileID: 11400000, guid: e22f5df38403944aa900a920a153b5c5, type: 2}
   _smallBiteSweetSpotTimer: 0
   _bigBiteSweetSpotTimer: 0
   _successfulSmallBites: 0
@@ -1693,10 +1694,10 @@ RectTransform:
   m_Father: {fileID: 397766188}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 70, y: 116.23}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &479321915
 MonoBehaviour:
@@ -7256,8 +7257,9 @@ MonoBehaviour:
   showOneShot: {fileID: 8300000, guid: b28df33aed0842b419d290ab32a0b665, type: 3}
   cursorOneShot: {fileID: 8300000, guid: cadba81623656a549b30d42304d799d5, type: 3}
   selectOneShot: {fileID: 8300000, guid: 62e202ad932c6ce4fa7a918b1e2bfbfb, type: 3}
-  backOneShot: {fileID: 8300000, guid: 45c7ba2605295d64685ce77706426fa9, type: 3}
+  backOneShot: {fileID: 8300000, guid: 8b206763e0194ec4cb986f5324b87572, type: 3}
   testElementIndex: 20
+  gameStateManager: {fileID: 11400000, guid: e22f5df38403944aa900a920a153b5c5, type: 2}
 --- !u!4 &1894989731
 Transform:
   m_ObjectHideFlags: 0
