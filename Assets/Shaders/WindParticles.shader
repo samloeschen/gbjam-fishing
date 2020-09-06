@@ -1,12 +1,10 @@
-﻿Shader "Unlit/FishingLine"
+﻿Shader "Unlit/WindParticles"
 {
     Properties
     {
         _PaletteTexture("Palette Texture", 2D) = "white" {}
         _PaletteA("Palette A", Range(0, 1)) = 0
-        _PaletteB("Palette B", Range(0, 1)) = 0
-        _MidPoint("Mid Point", Range(0, 1)) = 0.5
-
+        _PaletteB("Palette B", Range(0, 1)) = 1
     }
 
     SubShader
@@ -44,9 +42,6 @@
 
             sampler2D _GrabTexture;
             sampler2D _PaletteTexture;
-            float _PaletteA;
-            float _PaletteB;
-            float _MidPoint;
 
             v2f vert (appdata v)
             {
@@ -61,7 +56,7 @@
             {
                 half3 grabColor = tex2Dproj(_GrabTexture, i.grabPos).rgb;
                 const float3 W = float3(0.2125, 0.7154, 0.0721);
-                float s = lerp(_PaletteA, _PaletteB, step(dot(grabColor, W), _MidPoint));
+                float s = step(dot(grabColor, W), 0.5);
                 return tex2Dlod(_PaletteTexture, float4(s, 0.0, 0.0, 0.0));
             }
             ENDCG

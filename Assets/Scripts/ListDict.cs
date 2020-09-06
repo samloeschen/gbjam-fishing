@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 public class ListDict<TKey, TValue> {
     public readonly List<TKey> Keys;
     public readonly List<TValue> Values;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bootstrap : MonoBehaviour {
+    public Transform environmentParent;
     public GameStateManager gameStateManager;
     public List<EnvironmentDataObject> environmenList;
     public PhoneManager phoneManager;
@@ -51,7 +52,7 @@ public class Bootstrap : MonoBehaviour {
 
     void LoadEnvironment(EnvironmentData environmentData) {
         Vector3 position = environmentData.prefab.GetComponent<Transform>().position;
-        GameObject.Instantiate(environmentData.prefab, position, Quaternion.identity);
+        GameObject.Instantiate(environmentData.prefab, position, Quaternion.identity, environmentParent);
     }
 
     void OnDisable() {

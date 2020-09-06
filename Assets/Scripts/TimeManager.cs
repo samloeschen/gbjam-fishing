@@ -66,7 +66,7 @@ public class TimeManager : MonoBehaviour {
     public void UpdateLight(LightAnimator animData, float t) {
         Vector3 euler = animData.lightTransform.eulerAngles;
         euler.x = animData.lightRotationCurve.Evaluate(t);
-        animData.lightTransform.eulerAngles = Vector3.right * euler.x;
+        animData.lightTransform.localEulerAngles = Vector3.right * euler.x;
         animData.light.intensity = animData.lightIntensityCurve.Evaluate(t);
     }
 

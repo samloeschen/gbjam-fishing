@@ -7,13 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FishingLIne
+  m_Name: WindTrail
   m_Shader: {fileID: 4800000, guid: 9a77e49453a60440ea887bbade1712b3, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3500
+  m_CustomRenderQueue: 2450
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -68,10 +68,11 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
+    - _MidPoint: 0.7
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _PaletteA: 0
-    - _PaletteB: 1
+    - _PaletteA: 0.388
+    - _PaletteB: 0.608
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
