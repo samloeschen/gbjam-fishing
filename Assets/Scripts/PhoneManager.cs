@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.U2D;
+
 
 public class PhoneManager : MonoBehaviour {
+    public CanvasScaler canvasScaler;
     public Animator phoneAnimator;
     public GameObject scrollViewItemPrefab;
     public Transform scrollViewContentTransform;
@@ -66,6 +69,8 @@ public class PhoneManager : MonoBehaviour {
     [System.NonSerialized] int _selectedCellIndex;
     public RectTransform selectedCellCursorTransform;
 
+    
+    public PixelPerfectCamera pixelPerfectCamera;
 
     void Awake( ){
         _charArray = new CharArray(256);
@@ -162,6 +167,8 @@ public class PhoneManager : MonoBehaviour {
 
     public int testElementIndex;
     void Update() {
+
+        // canvasScaler.scaleFactor = pixelPerfectCamera.pixelRatio;
         HandleInput();
         if (_showTimer >= 0f) {
             _showTimer -= Time.deltaTime;

@@ -64,6 +64,7 @@ public class GameStateManager: ScriptableObject {
     public void SaveGame() {
         string json = StringSerializationAPI.Serialize(typeof(GameState), gameState);
         PlayerPrefs.SetString(PLAYER_PREFS_KEY, json);
+        PlayerPrefs.Save();
 #if UNITY_EDITOR
         Debug.Log("Saved game to PlayerPrefs");
 #endif

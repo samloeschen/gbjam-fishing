@@ -47,7 +47,6 @@ public struct TimeRange {
     public int min;
     public int max;
     public bool ContainsTime(int value) {
-        Debug.Log(value + " " + min + " " + max);
         if (min <= max) {
             return value >= min && value <= max;
         } else {
