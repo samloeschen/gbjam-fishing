@@ -15,8 +15,7 @@ MonoBehaviour:
   data:
     name: Boomer
     profileSprite: {fileID: 21300000, guid: 23af452c02a2b42859f5ccdbe310dc07, type: 3}
-    profileText: Well meaning dad that is DEFINITELY voting for Biden. You wonder
-      if you've ever met any of his kids
+    profileText: Age is just a number. Looking for someone fiery and adventurous.
     basePercentage: 20
     timeRanges:
     - min: 5
@@ -24,9 +23,3 @@ MonoBehaviour:
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
       percentageBoost: 35
-    saveData:
-      unlocked: 1
-      numberCaught: 1
-      numberMissed: 0
-      timeFirstCaughtHours: 11
-      timeFirstCaughtMinutes: 1

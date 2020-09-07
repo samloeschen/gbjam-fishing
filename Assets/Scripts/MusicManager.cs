@@ -21,7 +21,7 @@ public class MusicManager: MonoBehaviour {
         }
 
         public float remainingTime => Mathf.Min(chordsSource.GetRemainingTime(), Mathf.Min(melodiesSource.GetRemainingTime(), arpBassSource.GetRemainingTime()));
-        public bool isPlaying => chordsSource.GetRemainingTime() > Mathf.Epsilon || melodiesSource.GetRemainingTime() > Mathf.Epsilon || arpBassSource.GetRemainingTime() > Mathf.Epsilon;
+        public bool isPlaying => chordsSource.isPlaying || melodiesSource.isPlaying || arpBassSource.isPlaying;
     }
     List<Medley> _inFlightMedleys;
     Medley CreateNewMedley(bool play = true) {
@@ -45,7 +45,6 @@ public class MusicManager: MonoBehaviour {
         if (play) { medley.Play(); }
         return medley;
     }
-
 
     void OnEnable() {
         _inFlightMedleys = new List<Medley>(4);
@@ -74,7 +73,7 @@ public class MusicManager: MonoBehaviour {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void MusicBootstrap() {
         const int MUSIC_SCENE_INDEX = 1;
-        SceneManager.LoadSceneAsync(MUSIC_SCENE_INDEX, LoadSceneMode.Additive);
+        SceneManager.LoadScene(MUSIC_SCENE_INDEX, LoadSceneMode.Additive);
     }
 }
 

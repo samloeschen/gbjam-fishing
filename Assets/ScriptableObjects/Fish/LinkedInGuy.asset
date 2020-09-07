@@ -15,8 +15,7 @@ MonoBehaviour:
   data:
     name: LinkedIn Guy
     profileSprite: {fileID: 21300000, guid: c03ffc6e9fc47487e9ba34033b771f84, type: 3}
-    profileText: "Wunderkind of crypto. INspriational, INfluencial, and on my 11th
-      INternship. I don't call my meetings 'meetings' \u2013 I call them 'doings'."
+    profileText: BTC 4 life. I dont call my meetings 'meetings', I call them 'doings'.
     basePercentage: 15.4
     timeRanges:
     - min: 12
@@ -24,9 +23,3 @@ MonoBehaviour:
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
       percentageBoost: 32.4
-    saveData:
-      unlocked: 0
-      numberCaught: 0
-      numberMissed: 0
-      timeFirstCaughtHours: 0
-      timeFirstCaughtMinutes: 0

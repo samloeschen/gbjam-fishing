@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ScreenplayWriter
   m_EditorClassIdentifier: 
   data:
-    name: Screenplay Writer
+    name: Writer
     profileSprite: {fileID: 21300000, guid: c093d1096e9b04a8c86ec3a22a4c7688, type: 3}
     profileText: Writer and coffee-shop squatter. Writing my first film script. Looking
       for a hot Hollywood executive to option me. Or someone to wash all these mugs.
@@ -24,9 +24,3 @@ MonoBehaviour:
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
       percentageBoost: 35
-    saveData:
-      unlocked: 0
-      numberCaught: 0
-      numberMissed: 0
-      timeFirstCaughtHours: 0
-      timeFirstCaughtMinutes: 0

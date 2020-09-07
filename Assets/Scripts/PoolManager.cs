@@ -17,6 +17,24 @@ public class PoolManager {
         return PoolInstantiate(prefab, Vector3.zero, Quaternion.identity);
     }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    public static void SceneSetup() {
+        SceneManager.sceneUnloaded += (Scene _) => {
+            TrimDeadInstances();
+        };
+    }
+
+    public static void TrimDeadInstances() {
+        foreach (var pool in pools.Values) {
+            for (int i = 0; i < pool.Count; i++) {
+                if(pool[i] == null && !ReferenceEquals(pool[i], null)) {
+                    pool.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+    }
+
     public static GameObject PoolInstantiate(GameObject prefab, Vector3 position, Quaternion rotation) {
         if(prefab == null) return null;
         GameObject tempObject = null;

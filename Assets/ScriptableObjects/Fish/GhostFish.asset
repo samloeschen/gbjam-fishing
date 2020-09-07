@@ -16,7 +16,7 @@ MonoBehaviour:
     name: Flake
     profileSprite: {fileID: 21300000, guid: 4c5cefcbb3eba477cbb244b8dcd3afab, type: 3}
     profileText: I dont really like to message first. Shoot your shot!! Up for anything,
-      but love long conversations
+      but love long talks
     basePercentage: 30
     timeRanges:
     - min: 24
@@ -24,9 +24,3 @@ MonoBehaviour:
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: 9483924cbddee465486d86f31277d64a, type: 2}
       percentageBoost: 35
-    saveData:
-      unlocked: 0
-      numberCaught: 0
-      numberMissed: 0
-      timeFirstCaughtHours: 0
-      timeFirstCaughtMinutes: 0

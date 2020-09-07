@@ -38,7 +38,6 @@ public class RodBehaviour : MonoBehaviour {
             break;
 
             case RodAction.SmallBite:
-            OneShotManager.PlayOneShot(tugOneShot);
             animator.SetTrigger("SmallBite");
             break;
 

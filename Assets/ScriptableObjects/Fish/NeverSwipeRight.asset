@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: NeverSwipeRight
   m_EditorClassIdentifier: 
   data:
-    name: Never Swipes Right
+    name: Hard To Get
     profileSprite: {fileID: 21300000, guid: aa610fad230e24d04a5f880cc238ad3e, type: 3}
-    profileText: 'Wow! This fish is extremely hard to catch. You should consider yourself
+    profileText: 'Wow! This fish never swipes right. You should consider yourself
       lucky! '
     basePercentage: 5
     timeRanges:
@@ -24,9 +24,3 @@ MonoBehaviour:
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
       percentageBoost: 30
-    saveData:
-      unlocked: 0
-      numberCaught: 0
-      numberMissed: 0
-      timeFirstCaughtHours: 0
-      timeFirstCaughtMinutes: 0

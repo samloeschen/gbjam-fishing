@@ -6,6 +6,7 @@ public class TitleScreenBehaviour : MonoBehaviour {
 
     public Transform startTransform;
     public Transform howToPlayTransform;
+    public Transform creditsTransform;
     public Transform cursorTransform;
     TitleSelection currentSelection => _selectionOptions[_selectionIndex];
     public TitleScreen currentScreen;
@@ -23,15 +24,18 @@ public class TitleScreenBehaviour : MonoBehaviour {
     public Sprite[] tutorialSlides;
     int _tutorialIndex;
 
+
+    public SpriteRenderer creditsSpriteRenderer;
+
     TitleSelection[] _selectionOptions = {
-        TitleSelection.Start, TitleSelection.HowToPlay
+        TitleSelection.Start, TitleSelection.HowToPlay, TitleSelection.Credits
     };
     Transform[] _selectionTransforms;
     int _selectionIndex = 0;
 
     void Start() {
         _selectionTransforms = new Transform[] {
-            startTransform, howToPlayTransform
+            startTransform, howToPlayTransform, creditsTransform
         };
         currentScreen = TitleScreen.Main;
     }
@@ -52,6 +56,10 @@ public class TitleScreenBehaviour : MonoBehaviour {
         case TitleSelection.HowToPlay:
             ShowTutorial();
         break;
+
+        case TitleSelection.Credits:
+            ShowCredits();
+        break;
         }
     }
 
@@ -68,6 +76,16 @@ public class TitleScreenBehaviour : MonoBehaviour {
     void HideTutorial() {
         currentScreen = TitleScreen.Main;
         tutorialSpriteRenderer.enabled = false;
+    }
+
+    void ShowCredits() {
+        currentScreen = TitleScreen.Credits;
+        creditsSpriteRenderer.enabled = true;
+    }
+
+    void HideCredits() {
+        currentScreen = TitleScreen.Main;
+        creditsSpriteRenderer.enabled = false;
     }
 
     void MutateSelection(int offset) {
@@ -117,14 +135,21 @@ public class TitleScreenBehaviour : MonoBehaviour {
                 OneShotManager.PlayOneShot(backOneShot);
             }
         break;
+
+        case TitleScreen.Credits:
+            if (Input.GetKeyDown(KeyCode.X)) {
+                HideCredits();
+                OneShotManager.PlayOneShot(backOneShot);
+            }
+        break;
         }
     }
 }
 
 public enum TitleSelection {
-    Start, HowToPlay
+    Start, HowToPlay, Credits
 }
 
 public enum TitleScreen {
-    Main, Tutorial
+    Main, Tutorial, Credits
 }

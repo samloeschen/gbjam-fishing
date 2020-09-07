@@ -15,9 +15,7 @@ MonoBehaviour:
   data:
     name: Weeb
     profileSprite: {fileID: 21300000, guid: ed649560cd1a841e8aefef853121a288, type: 3}
-    profileText: 'omg I LOVE MY HERO ACADEMIA
-
-      UwU'
+    profileText: asian lit major / polyglot / subs>dubs!
     basePercentage: 40
     timeRanges:
     - min: 16
@@ -25,9 +23,3 @@ MonoBehaviour:
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: 4d01120ea557a46ce983a683fd145b02, type: 2}
       percentageBoost: 35
-    saveData:
-      unlocked: 0
-      numberCaught: 0
-      numberMissed: 0
-      timeFirstCaughtHours: 0
-      timeFirstCaughtMinutes: 0

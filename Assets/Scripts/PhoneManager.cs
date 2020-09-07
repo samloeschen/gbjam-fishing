@@ -49,8 +49,10 @@ public class PhoneManager : MonoBehaviour {
     public TextMeshProUGUI missedValueTMP;
     public TextMeshProUGUI timeTMP;
     public ScrollRect profileBlurbScrollRect;
+    public RectTransform profileScrollViewTransform;
     public ProfileScrollArrow profileUpArrow;
     public ProfileScrollArrow profileDownArrow;
+    public RectTransform profileScrollViewContentTransform;
 
     public float profileScrollDelta;
 
@@ -169,6 +171,7 @@ public class PhoneManager : MonoBehaviour {
 
     void OnEnable() {
         phoneEnabled = false;
+        profileBlurbScrollRect.verticalNormalizedPosition = 1f;
     }
 
     public int testElementIndex;
@@ -205,15 +208,20 @@ public class PhoneManager : MonoBehaviour {
 
         // update profile arrows
         if (phoneScreen == PhoneScreen.Profile) {
-            if (profileBlurbScrollRect.verticalNormalizedPosition >= 1f - profileScrollDelta * 0.2) {
-                profileUpArrow.enabled = false;
+            if (blurbTMP.rectTransform.sizeDelta.y > profileScrollViewTransform.sizeDelta.y) {
+                if (profileBlurbScrollRect.verticalNormalizedPosition >= 1f - 0.01f) {
+                    profileUpArrow.enabled = false;
+                } else {
+                    profileUpArrow.enabled = true;
+                }
+                if (profileBlurbScrollRect.verticalNormalizedPosition <= 0f + 0.01) {
+                    profileDownArrow.enabled = false;
+                } else {
+                    profileDownArrow.enabled = true;
+                }
             } else {
-                profileUpArrow.enabled = true;
-            }
-            if (profileBlurbScrollRect.verticalNormalizedPosition <= 0f + profileScrollDelta * 0.2) {
                 profileDownArrow.enabled = false;
-            } else {
-                profileDownArrow.enabled = true;
+                profileUpArrow.enabled = false;
             }
         }
     }
@@ -351,12 +359,19 @@ public class PhoneManager : MonoBehaviour {
                     ShowMatches();
                     OneShotManager.PlayOneShot(backOneShot, 1f);
                 }
+                float offset = profileScrollDelta  / profileScrollViewContentTransform.sizeDelta.y;
                 if (Input.GetKeyDown(KeyCode.UpArrow)) {
-                    profileBlurbScrollRect.verticalNormalizedPosition += profileScrollDelta;
+                    profileBlurbScrollRect.verticalNormalizedPosition += offset;
+                    if (profileBlurbScrollRect.verticalNormalizedPosition > 1f - offset) {
+                        profileBlurbScrollRect.verticalNormalizedPosition = 1f;
+                    }
                     profileUpArrow.Press();
                 }
                 if (Input.GetKeyDown(KeyCode.DownArrow)) {
-                    profileBlurbScrollRect.verticalNormalizedPosition -= profileScrollDelta;
+                    profileBlurbScrollRect.verticalNormalizedPosition -= profileScrollDelta / profileScrollViewContentTransform.sizeDelta.y;
+                    if (profileBlurbScrollRect.verticalNormalizedPosition < offset) {
+                        profileBlurbScrollRect.verticalNormalizedPosition = 0f;
+                    }
                     profileDownArrow.Press();
 
                 }

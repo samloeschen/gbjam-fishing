@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 25e9e59966da33949a1d107e51af5fbb
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: CG pixel 4x5
+  fontNames:
+  - CG pixel 4x5
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: a9db028af5bbc90488129f3c5252dd8c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

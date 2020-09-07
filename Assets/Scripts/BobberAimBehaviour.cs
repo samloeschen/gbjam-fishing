@@ -31,6 +31,8 @@ public class BobberAimBehaviour: MonoBehaviour {
 
     [Header("SFX")]
     public AudioClip buttonPressClip;
+    public AudioClip goodPressOneShot;
+    public AudioClip badPressOneShot;
 
     void OnEnable() {
         if (rodBehaviour.currentState == RodState.Idle) {
@@ -111,12 +113,14 @@ public class BobberAimBehaviour: MonoBehaviour {
 
                     case BiteResult.SmallBiteSuccess:
                     buttonIndicatorAnimator.SetTrigger("GoodPress");
+                    OneShotManager.PlayOneShot(goodPressOneShot);
                     SpawnHeartParticles();
                     rodBehaviour.HandleInput(RodAction.SmallBite);
                     break;
 
                     case BiteResult.BiteFail:
                     buttonIndicatorAnimator.SetTrigger("BadPress");
+                    OneShotManager.PlayOneShot(badPressOneShot);
                     rodBehaviour.HandleInput(RodAction.SmallBite);
                     break;
 

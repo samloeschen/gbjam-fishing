@@ -15,13 +15,7 @@ MonoBehaviour:
   data:
     name: Boot
     profileSprite: {fileID: 21300000, guid: c8352e60e61464f3ebc0a88d25a5b715, type: 3}
-    profileText: Old boot trying to find my mate! Hvae you seen them anywhere?
+    profileText: Old boot trying to find my mate! Have you seen them anywhere?
     basePercentage: 20
     timeRanges: []
     favoriteBait: []
-    saveData:
-      unlocked: 0
-      numberCaught: 0
-      numberMissed: 0
-      timeFirstCaughtHours: 0
-      timeFirstCaughtMinutes: 0
