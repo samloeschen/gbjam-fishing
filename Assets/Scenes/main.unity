@@ -1732,10 +1732,10 @@ RectTransform:
   m_Father: {fileID: 397766188}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 64.69928, y: 26.54}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &479321915
 MonoBehaviour:
@@ -2610,6 +2610,110 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 776672897}
   m_CullTransparentMesh: 0
+--- !u!1001 &781958053
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 877518663484473848, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_Name
+      value: WindParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.052
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.906
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473853, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.06517
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473854, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: simulationSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473854, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473854, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: NoiseModule.strength.scalar
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473854, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 877518663484473854, guid: d3dde91c063deae459fbd42cbe3a5b67,
+        type: 3}
+      propertyPath: NoiseModule.frequency
+      value: 0.5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d3dde91c063deae459fbd42cbe3a5b67, type: 3}
 --- !u!1 &791951628
 GameObject:
   m_ObjectHideFlags: 0

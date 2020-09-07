@@ -489,7 +489,11 @@ public class FishManager : MonoBehaviour {
         fish.biteCount++;
         buttonSpriteRenderer.enabled = true;
         GameObject biteAnimationPrefab;
-        bool isBigBite = _successfulSmallBites > fish.behaviour.minSmallBites && Random.value < fish.behaviour.bigBiteChance;
+        float bigBiteChance = fish.behaviour.bigBiteChance;
+        if (_successfulSmallBites > 10) {
+            bigBiteChance += 0.1f;
+        }
+        bool isBigBite = _successfulSmallBites > fish.behaviour.minSmallBites && Random.value < bigBiteChance;
         if (isBigBite) {
             _bigBiteSweetSpotTimer = bigBiteSweetSpotDuration;
             biteAnimationPrefab = bigBiteAnimationPrefab;
@@ -583,6 +587,9 @@ public class FishManager : MonoBehaviour {
                 // float dist = (candidatePos - (Vector2)activeFish[j].position).magnitude;
                 float dist = (candidatePos - (Vector2)activeFish[j].targetPosition).magnitude;
                 totalDist += dist;
+
+                dist = (candidatePos - (Vector2)activeFish[j].position).magnitude * 0.25f;
+                totalDist += dist; 
             }
             currentScore += (totalDist / (activeFish.Count - 1f)) * avoidOtherFishWeight;
 
