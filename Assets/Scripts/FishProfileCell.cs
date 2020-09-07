@@ -9,6 +9,7 @@ public class FishProfileCell : MonoBehaviour {
     [System.NonSerialized] 
     public FishDataObject fishDataObject;
     public RectTransform rectTransform;
+    public int index;
 
 
     void OnEnable() {

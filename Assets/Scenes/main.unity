@@ -1732,10 +1732,10 @@ RectTransform:
   m_Father: {fileID: 397766188}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 64.69928, y: 26.27}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &479321915
 MonoBehaviour:
@@ -1795,7 +1795,7 @@ MonoBehaviour:
   m_textAlignment: 257
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 13
+  m_lineSpacing: 12
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -2695,7 +2695,7 @@ PrefabInstance:
     - target: {fileID: 877518663484473854, guid: d3dde91c063deae459fbd42cbe3a5b67,
         type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 0.5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 877518663484473854, guid: d3dde91c063deae459fbd42cbe3a5b67,
         type: 3}
@@ -7720,9 +7720,9 @@ MonoBehaviour:
   buttonIndicatorAnimator: {fileID: 1444504994}
   buttonIndicatorTransform: {fileID: 1444504993}
   mashIndicatorOffset: {x: 0, y: 0}
-  mashDecayRate: 0.15
-  mashPressValue: 0.18
-  mashMaxDuration: 1.5
+  mashDecayRate: 0.12
+  mashPressValue: 0.15
+  mashMaxDuration: 1.8
   mashMode: 0
   heartParticles: {fileID: 4512569167989882148, guid: 42502b29e142f4bc98a62d278843b6a9,
     type: 3}

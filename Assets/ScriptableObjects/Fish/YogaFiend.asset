@@ -15,9 +15,8 @@ MonoBehaviour:
   data:
     name: Yogi
     profileSprite: {fileID: 21300000, guid: 28346390370a341759cc6ae0b8c1300c, type: 3}
-    profileText: "Greetings!! I\u2019m a soul wanderer and Reiki master. Looking
-      for someone to practice my techniques on. Would love to help work out some
-      of your kinks."
+    profileText: Greetings!! I'm a soul wanderer and Reiki master. Looking for someone
+      to practice my techniques on. Would love to help work out some of your kinks.
     basePercentage: 35
     timeRanges:
     - min: 4

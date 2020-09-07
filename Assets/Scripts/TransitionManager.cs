@@ -22,6 +22,8 @@ public class TransitionManager : MonoBehaviour {
 
             case TransitionAnimationEvent.TransitionOutEnd:
             SceneManager.UnloadSceneAsync(_currentScene);
+            SceneManager.LoadSceneAsync(TransitionManager._nextScene, LoadSceneMode.Additive);
+
             break;
 
             case TransitionAnimationEvent.TransitionInStart:
@@ -51,7 +53,7 @@ public static class SceneUnloadedCallbackHandler {
     public static void SceneUnloadedCallback(Scene scene) {
         Debug.Log("callback");
         if (scene.buildIndex == TransitionManager._currentScene && TransitionManager._nextScene >= 0) {
-            SceneManager.LoadScene(TransitionManager._nextScene, LoadSceneMode.Additive);
+            // SceneManager.LoadScene(TransitionManager._nextScene, LoadSceneMode.Additive);
         }
     }
 }

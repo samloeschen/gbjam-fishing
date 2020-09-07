@@ -118,6 +118,7 @@ public class PhoneManager : MonoBehaviour {
                 cellDict.Add(fishList[i], cell);
                 cell.Initialize(fishList[i]);
                 cellList.Add(cell);
+                cell.index = i;
             }
         }
         ShowMatches();
@@ -263,6 +264,7 @@ public class PhoneManager : MonoBehaviour {
 
     public void ShowMatches() {
         phoneScreen = PhoneScreen.Matches;
+        Debug.Log(_targetProfile);
         if (_targetProfile != null) {
             SnapToCell(_targetProfile);
         }
@@ -277,7 +279,13 @@ public class PhoneManager : MonoBehaviour {
     }
 
     public void SnapToCell(FishDataObject targetProfile) {
-
+        if (cellDict.TryGetValue(targetProfile, out var profileCell)) {
+            _selectedCellIndex = profileCell.index;
+            selectedProfileCell = profileCell;
+            selectedCellCursorTransform.position = selectedProfileCell.rectTransform.position;
+            float scroll = scrollRect.GetTargetScrollValue(selectedCellCursorTransform);
+            scrollRect.verticalNormalizedPosition = scroll;
+        }
     }
 
     public void HidePhone() {

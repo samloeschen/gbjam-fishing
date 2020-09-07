@@ -71,6 +71,7 @@ public class YouGotAMatchScreen : MonoBehaviour {
     }
 
     public void ShowFail() {
+        _goToPhone = false;
         bobberAimBehaviour.enabled = false;
         animator.SetTrigger("ShowFail");
     }

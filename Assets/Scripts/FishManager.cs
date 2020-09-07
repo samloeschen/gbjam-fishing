@@ -151,9 +151,10 @@ public class FishManager : MonoBehaviour {
         float r = Random.value;
         float cumulativeProbability = 0f;
         for (int i = 0; i < maxCandidateFish; i++) {
-            cumulativeProbability += realProbabilities[_randomIndexes[i]];
+            int index = _randomIndexes[i];
+            cumulativeProbability += realProbabilities[index];
             if (r < cumulativeProbability) {
-                return _randomIndexes[i];
+                return index;
             }
         }
         return -1;
@@ -167,7 +168,7 @@ public class FishManager : MonoBehaviour {
 
     public void CatchFish(FishDataObject fish) {
         _recentlyCaughtFish.Add(fish);
-        if (_recentlyCaughtFish.Count > 2) {
+        if (_recentlyCaughtFish.Count > 3) {
             _recentlyCaughtFish.RemoveAt(0);
         }
 

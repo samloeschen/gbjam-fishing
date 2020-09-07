@@ -15,9 +15,9 @@ MonoBehaviour:
   data:
     name: Premium Guy
     profileSprite: {fileID: 21300000, guid: 2ae630d0a4a9f427c98b420447b7f9d2, type: 3}
-    profileText: "The borders of his profile card are stitched in golden thread. He
-      spent a lot of money for the chance to talk to you, but can\u2019t manage much
-      more than a \u201Cwhat\u2019s up lol.\u201D"
+    profileText: "The borders of his profile card are stitched in golden thread.
+      He spent a lot of money for the chance to talk to you, but can\u2019t manage
+      much more than a \"what's up lol.\""
     basePercentage: 35
     timeRanges:
     - min: 18
@@ -25,9 +25,3 @@ MonoBehaviour:
     favoriteBait:
     - baitDataObject: {fileID: 11400000, guid: ae880d36f10be4449bd4b649ce276910, type: 2}
       percentageBoost: 35
-    saveData:
-      unlocked: 0
-      numberCaught: 0
-      numberMissed: 0
-      timeFirstCaughtHours: 0
-      timeFirstCaughtMinutes: 0
