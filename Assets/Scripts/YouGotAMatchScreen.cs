@@ -76,15 +76,6 @@ public class YouGotAMatchScreen : MonoBehaviour {
     }
 
     public FishDataObject testFishObject;
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            ShowSuccess(testFishObject, Input.GetKey(KeyCode.LeftShift));
-        }
-        if (Input.GetKeyDown(KeyCode.T)) {
-            ShowFail();
-        } 
-    }
-
     public void CatchScreenAnimationHook(CatchScreenAnimationEvent e) {
         if (onAnimationEvent != null) { onAnimationEvent(e); }
     }

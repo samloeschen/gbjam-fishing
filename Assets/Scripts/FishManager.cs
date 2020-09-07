@@ -256,11 +256,7 @@ public class FishManager : MonoBehaviour {
                 oldFish[i] = fish;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.F)) {
-            CatchFish(1);
-        }
-
+        
         // spawn new fish if needed
         if (activeFish.Count + _spawnQueue.Count < maxFishCount) {
             float shortInterval = Random.Range(shortSpawnIntervalMin, shortSpawnIntervalMax);

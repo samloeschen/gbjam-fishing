@@ -302,7 +302,7 @@ public class PhoneManager : MonoBehaviour {
     }
 
     public void HandleInput() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Return)) {
             if (!phoneEnabled) {
                 ShowPhone(PhoneScreen.Matches);
                 _nextOpenScreen = PhoneScreen.Matches;
